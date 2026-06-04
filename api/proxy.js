@@ -23,7 +23,7 @@ export default async function handler(req, res) {
   const {
     page = 1,
     pageSize = 100,
-    country = 'VEN',
+    country = 'CO',
     endpoint,
     apikey
   } = req.query;
