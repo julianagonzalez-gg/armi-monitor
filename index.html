@@ -756,6 +756,8 @@ async function fetchAll() {
     // Estructura real: { data: { orders: [], pagination: { totalPages } } }
     const ords=Array.isArray(d)?d:(d.data&&d.data.orders)?d.data.orders:(d.orders||d.data||d.results||[]);
     if(page===1&&ords.length===0) throw new Error('El API respondió sin órdenes. Verifica COUNTRY (COL) y API key.');
+    // Fijar fecha de hoy desde la primera orden real del API (hora Colombia)
+    if(page===1) setTodayFromOrders(ords);
  
     all=all.concat(ords);
  
@@ -909,12 +911,24 @@ function minsSince(o){
 }
  
 function toCam(s){return s.replace(/_([a-z])/g,(_,c)=>c.toUpperCase());}
-// Fecha local (Colombia UTC-5) en formato YYYY-MM-DD
+// Fecha local robusta: la extraemos del createDate de las órdenes mismas.
+// Las órdenes vienen ordenadas más reciente primero — la primera orden
+// del array tiene el createDate de "ahora" en hora Colombia.
+// Así nunca dependemos de UTC ni de offsets manuales.
 function localToday(){
+  // Fallback: si no hay órdenes aún, usamos el offset de Colombia (-5h)
+  // pero también lo podemos derivar del primer createDate recibido
+  if(window._armiTodayDate) return window._armiTodayDate;
   const now=new Date();
-  // Ajustamos a Colombia UTC-5
-  const col=new Date(now.getTime()-5*3600000);
+  const col=new Date(now.getTime()-5*3600*1000);
   return col.toISOString().slice(0,10);
+}
+// Llamada al cargar la primera página: fijamos la fecha del día desde el API
+function setTodayFromOrders(ords){
+  if(!ords||!ords.length) return;
+  // La primera orden es la más reciente — su createDate es la fecha actual en Colombia
+  const cd=(ords[0].createDate||ords[0].createdAt||'').slice(0,10);
+  if(cd) window._armiTodayDate=cd;
 }
 function toSnk(s){return s.replace(/([A-Z])/g,'_$1').toLowerCase();}
 function avg(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;}
