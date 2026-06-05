@@ -17,7 +17,7 @@
   --blue:#1a6bb3; --blue-bg:rgba(26,107,179,0.14); --blue-t:#4da6e8;
   --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif;
 }
-
+ 
 /* ── MODO CLARO ── */
 body.light {
   --bg:#f0f2f5; --surface:#ffffff; --surface2:#f5f6f8; --surface3:#eaecf0;
@@ -39,7 +39,7 @@ body.light .oid-row.g { background:rgba(30,122,62,0.05); }
 body.light .oid-row.y { background:rgba(160,112,16,0.05); }
 body.light .oid-row.r { background:rgba(143,32,32,0.06); }
 body.light .times-grid .tc:last-child { background:rgba(83,74,183,0.05); }
-
+ 
 /* ── TOGGLE SWITCH ── */
 .theme-toggle {
   display:flex; align-items:center; gap:8px;
@@ -185,7 +185,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 </style>
 </head>
 <body>
-
+ 
 <!-- HEADER -->
 <div class="hdr">
   <div class="logo">
@@ -213,7 +213,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     </div>
   </div>
 </div>
-
+ 
 <!-- CONFIG -->
 <div class="cfg">
   <div class="cfl" style="max-width:300px">
@@ -236,7 +236,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     <button class="btn" onclick="saveConfig()">Guardar</button>
   </div>
 </div>
-
+ 
 <!-- TABS -->
 <div class="tabs">
   <div class="tab active" onclick="switchTab('general')">General</div>
@@ -244,13 +244,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
   <div class="tab" onclick="switchTab('alertas')">Deep ordenes · KM &amp; TP</div>
   <div class="tab" onclick="switchTab('alertas2')">Sin movimiento &amp; Canceladas</div>
 </div>
-
+ 
 <div class="main">
   <div id="errBox" style="display:none" class="err"></div>
-
+ 
   <!-- ═══════════════════════════════ TAB 1: GENERAL ═══════════════════════════════ -->
   <div id="tab-general" class="tab-content active">
-
+ 
     <!-- BLOQUE ÓRDENES: panel con título -->
     <div class="panel" style="overflow:visible;border-color:rgba(77,166,232,0.2)">
       <div class="ph" style="background:rgba(26,107,179,0.08);border-bottom:1px solid rgba(26,107,179,0.15)">
@@ -295,7 +295,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
-
+ 
     <!-- BLOQUE TIEMPOS: panel separado con título -->
     <div class="panel" style="overflow:visible;border-color:rgba(83,74,183,0.25)">
       <div class="ph" style="background:rgba(83,74,183,0.1);border-bottom:1px solid rgba(83,74,183,0.2)">
@@ -344,7 +344,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
-
+ 
     <!-- ENCOLAMIENTO Ciudad + Marca -->
     <div class="g2">
       <div class="panel">
@@ -366,7 +366,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
-
+ 
     <!-- ENCOLAMIENTO Tienda -->
     <div class="panel">
       <div class="ph"><div class="pt">Encolamiento · Tienda</div><div class="pc" id="cnt-tie">—</div></div>
@@ -377,12 +377,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
-
+ 
   </div><!-- /tab-general -->
-
+ 
   <!-- ═══════════════════════════════ TAB 2: DEEP POR CIUDAD ═══════════════════════════════ -->
   <div id="tab-ciudades" class="tab-content">
-
+ 
     <div class="panel">
       <div class="ph">
         <div class="pt">7 indicadores por ciudad</div>
@@ -410,7 +410,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
-
+ 
     <div class="panel">
       <div class="ph">
         <div class="pt">Tiempos promedio por etapa · Ciudad</div>
@@ -435,12 +435,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
-
+ 
   </div><!-- /tab-ciudades -->
-
+ 
   <!-- ═══════════════════════════════ TAB 3: DEEP ÓRDENES ═══════════════════════════════ -->
   <div id="tab-alertas" class="tab-content">
-
+ 
     <!-- SECCIÓN KM -->
     <div class="panel">
       <div class="ph">
@@ -468,7 +468,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
-
+ 
     <!-- SECCIÓN TP -->
     <div class="panel">
       <div class="ph">
@@ -492,13 +492,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
-
+ 
   </div><!-- /tab-alertas -->
-
-
+ 
+ 
   <!-- ═══════════════════════ TAB 4: SIN MOVIMIENTO + CANCELADAS ═══════════════════════ -->
   <div id="tab-alertas2" class="tab-content">
-
+ 
     <!-- CONFIGURACIÓN X minutos -->
     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px 20px">
       <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3)">Umbral sin movimiento</div>
@@ -511,7 +511,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
       <div style="font-size:11px;color:var(--text3)">Órdenes en estado <em>enviada</em> sin pasar a asignada por más de X min</div>
       <div id="cnt-sinmov" style="margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--red-t)">—</div>
     </div>
-
+ 
     <!-- ÓRDENES SIN MOVIMIENTO -->
     <div class="panel">
       <div class="ph" style="background:rgba(179,58,58,0.08);border-bottom:1px solid rgba(179,58,58,0.2)">
@@ -530,7 +530,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
-
+ 
     <!-- ─── CANCELADAS DEL DÍA ─── -->
     <!-- KPIs canceladas -->
     <div class="panel" style="border-color:rgba(179,58,58,0.25)">
@@ -573,7 +573,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
-
+ 
     <!-- TABLA canceladas por ciudad -->
     <div class="g2">
       <div class="panel">
@@ -597,7 +597,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
           </table>
         </div>
       </div>
-
+ 
       <div class="panel">
         <div class="ph">
           <div class="pt">Canceladas por comercio / marca</div>
@@ -620,7 +620,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
-
+ 
     <!-- HEATMAP HORARIO DE CANCELACIONES -->
     <div class="panel">
       <div class="ph">
@@ -638,7 +638,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
-
+ 
     <!-- DETALLE IDs canceladas recientes -->
     <div class="panel">
       <div class="ph">
@@ -657,11 +657,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
-
+ 
   </div><!-- /tab-alertas2 -->
-
+ 
 </div><!-- /main -->
-
+ 
 <!-- TICKER -->
 <div class="ticker">
   <span style="font-size:9px;letter-spacing:1px">SEMÁFORO ENCOL.:</span>
@@ -671,7 +671,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
   <span style="color:var(--border2)">|</span>
   <span>Última actualización: <span id="tickTs" style="color:var(--text2)">—</span></span>
 </div>
-
+ 
 <script>
 // ═══════════════════════════════
 //  ESTADO GLOBAL
@@ -691,7 +691,7 @@ const S = {
   timer: null,
   currentTab: 'general'
 };
-
+ 
 // ═══════════════════════════════
 //  CONFIG
 // ═══════════════════════════════
@@ -712,7 +712,7 @@ function saveConfig() { localStorage.setItem('acfg',JSON.stringify(cfg())); fetc
     if(s.ps) document.getElementById('cfPage').value=s.ps;
   }catch(e){}
 })();
-
+ 
 // ═══════════════════════════════
 //  TABS
 // ═══════════════════════════════
@@ -726,50 +726,46 @@ function switchTab(name) {
   });
   S.currentTab=name;
 }
-
+ 
 // ═══════════════════════════════
 //  FETCH
 // ═══════════════════════════════
 async function fetchAll() {
   const c=cfg(); let page=1, all=[], more=true;
   while(more){
-    // ── Llamamos al proxy de Vercel, no al API de Armi directamente ──
-    // El proxy vive en /api/proxy y se encarga de hablar con Armi sin CORS.
-    const params = new URLSearchParams({
-      page,
-      pageSize: c.ps,
-      country: c.cou,
-      endpoint: c.ep,
-      apikey: c.key
-    });
     let r;
     try {
-      r = await fetch(`/api/proxy?${params}`);
+      r=await fetch(`${c.ep}?page=${page}&pageSize=${c.ps}`,{
+        method:'GET',
+        headers:{
+          'Content-Type':'application/json',
+          'COUNTRY':c.cou,
+          'armi-business-api-key':c.key
+        }
+      });
     } catch(netErr) {
-      throw new Error('No se pudo conectar al proxy. Verifica que el deploy en Vercel esté activo. Detalle: '+netErr.message);
+      throw new Error('Error de red (posible bloqueo CORS). Verifica el endpoint o contacta al equipo técnico para habilitar CORS. Detalle: '+netErr.message);
     }
-    if(r.status===401||r.status===403) throw new Error('API Key inválida o sin permisos (HTTP '+r.status+'). Verifica el key y el COUNTRY.');
-    if(r.status===404) throw new Error('Proxy no encontrado. Asegúrate de que el archivo api/proxy.js está en el repositorio.');
-    if(!r.ok) {
-      let detail='';
-      try{const j=await r.json();detail=j.detail||j.error||'';}catch(e){}
-      throw new Error(`Error HTTP ${r.status}. ${detail}`);
-    }
+    if(r.status===401||r.status===403) throw new Error('API Key invalida o sin permisos (HTTP '+r.status+'). Verifica el key y el header COUNTRY.');
+    if(r.status===404) throw new Error('Endpoint no encontrado (HTTP 404). URL: '+c.ep);
+    if(!r.ok) throw new Error('Error del servidor: HTTP '+r.status);
     let d;
-    try { d=await r.json(); } catch(e){ throw new Error('Respuesta no válida del proxy.'); }
-    // Si el proxy devuelve un error de Armi
-    if(d.error) throw new Error(d.error+(d.detail?' — '+d.detail:''));
-    const ords=Array.isArray(d)?d:(d.orders||d.data||d.results||d.content||d.items||[]);
-    if(page===1&&ords.length===0) throw new Error('El API respondió sin órdenes. Verifica COUNTRY ("VEN" o "CO") y el API key.');
+    try { d=await r.json(); } catch(e){ throw new Error('La respuesta no es JSON valido. Verifica el endpoint.'); }
+    // Estructura real: { status, data: { orders: [], pagination: { totalPages } } }
+    const ords=Array.isArray(d)?d:
+      (d.data&&d.data.orders)?d.data.orders:
+      (d.orders||d.data||d.results||d.content||d.items||[]);
+    if(page===1&&ords.length===0) throw new Error('El API respondió sin órdenes. Verifica COUNTRY (COL) y API key.');
     all=all.concat(ords);
-    const tp=d.totalPages||d.total_pages||d.pages||null;
-    if(tp&&page<tp&&ords.length===c.ps){page++;}
-    else if(!tp&&ords.length===c.ps&&page<20){page++;}
+    const pagination=d.data&&d.data.pagination?d.data.pagination:null;
+    const tp=pagination?pagination.totalPages:(d.totalPages||d.total_pages||null);
+    // Limitar a 10 páginas por llamada para no sobrecargar (300 órdenes con pageSize=30)
+    if(tp&&page<tp&&page<10&&ords.length===c.ps){page++;}
     else{more=false;}
   }
   return all;
 }
-
+ 
 async function fetchNow() {
   const dot=document.getElementById('sdot');
   dot.style.background='var(--yellow-t)';
@@ -789,72 +785,96 @@ async function fetchNow() {
     render();
   }
 }
-
+ 
 // ═══════════════════════════════
 //  PROCESO DE ÓRDENES
 // ═══════════════════════════════
+ 
+const CITY_NAMES={
+  'BOG':'Bogotá','BAR':'Barranquilla','ALI':'Cali','MED':'Medellín',
+  'CTG':'Cartagena','BUC':'Bucaramanga','PER':'Pereira','MAN':'Manizales',
+  'CAL':'Cali','CUC':'Cúcuta','IBA':'Ibagué','SMA':'Santa Marta',
+  'VIL':'Villavicencio','ARM':'Armenia','PAL':'Palmira','NEI':'Neiva',
+  'MON':'Montería','VAL':'Valledupar','RIO':'Riohacha','TUN':'Tunja',
+  'POP':'Popayán','FLO':'Florencia','LET':'Leticia','MIT':'Mitú',
+  'ARA':'Arauca','YOP':'Yopal','INI':'Inírida','PRS':'Puerto Carreño',
+  'MOC':'Mocoa','QUI':'Quibdó','SJG':'San José del Guaviare',
+};
+function cityName(id){ return CITY_NAMES[id]||id||'Desconocida'; }
+ 
+// Estados del API de Armi
+// ENVIADA=en cola sin mensajero, ASIGNADA=mensajero asignado
+// PICKING=mensajero recogiendo, PICKING TERMINADO=listo para entregar
+// EN CAMINO=en ruta, EN PUNTO DE ENTREGA=llegando, FINALIZADA=ok, CANCELADA=cancelada
+function isActive(state){ return !['FINALIZADA','CANCELADA'].includes((state||'').toUpperCase().trim()); }
+function isFin(state){ return (state||'').toUpperCase().trim()==='FINALIZADA'; }
+function isCan(state){ return (state||'').toUpperCase().trim()==='CANCELADA'; }
+function isEnv(state){ return (state||'').toUpperCase().trim()==='ENVIADA'; }
+function isAsig(state){ return (state||'').toUpperCase().trim()==='ASIGNADA'; }
+ 
 function process(ords) {
   const today=new Date().toISOString().slice(0,10);
   const d=S.day;
-
+ 
   ords.forEach(o=>{
-    const id=o.id||o.orderId||o.order_id;
+    // ── Campos reales del API de Armi ──
+    const id=o.orderId||o.businessOrderId||o.id;
     if(!id) return;
-    const created=o.createdAt||o.created_at||o.create_date||'';
+ 
+    // Solo órdenes de hoy
+    const created=o.createDate||o.createdAt||o.created_at||'';
     if(created&&!created.startsWith(today)) return;
-
-    const city=(o.city||o.ciudad||o.cityName||'Desconocida').trim();
+ 
+    // Ciudad: viene como código (BOG, BAR, ALI...) — lo convertimos a nombre
+    const cityId=(o.cityId||o.city||'').trim();
+    const city=cityName(cityId);
     if(!d.byCity[city]) d.byCity[city]={fin:0,can:0,otros:0,total:0,canLt15:0,canGt15:0,gt60:0,t1:[],t2:[],t3:[],t4:[],tTotal:[],env:0,asig:0};
-
-    const st=(o.status||o.estado||o.state||'').toLowerCase();
-    const isFin=['completed','finalizada','delivered','entregada','done'].includes(st);
-    const isCan=['cancelled','cancelada','canceled'].includes(st);
-
+ 
+    const state=o.state||o.status||o.estado||'';
+ 
     if(!S.seen.has(id)){
       S.seen.add(id);
       d.total++;
       d.byCity[city].total++;
-
-      if(isFin){
+ 
+      if(isFin(state)){
         d.fin++; d.byCity[city].fin++;
-        const times=calcTimes(o);
-        if(times.t1!==null){d.t1.push(times.t1);d.byCity[city].t1.push(times.t1);}
-        if(times.t2!==null){d.t2.push(times.t2);d.byCity[city].t2.push(times.t2);}
-        if(times.t3!==null){d.t3.push(times.t3);d.byCity[city].t3.push(times.t3);}
-        if(times.t4!==null){d.t4.push(times.t4);d.byCity[city].t4.push(times.t4);}
-        if(times.tTotal!==null){
-          d.tTotal.push(times.tTotal);
-          d.byCity[city].tTotal.push(times.tTotal);
-          if(times.tTotal>60){d.gt60fin++;d.byCity[city].gt60++;}
+        // tp = tiempo total en minutos (ya calculado por Armi)
+        const tTotal=parseFloat(o.tp)||null;
+        if(tTotal!==null&&tTotal>0){
+          d.tTotal.push(tTotal);
+          d.byCity[city].tTotal.push(tTotal);
+          if(tTotal>60){d.gt60fin++;d.byCity[city].gt60++;}
         }
-        if(times.t1!==null&&times.t2!==null&&(times.t1+times.t2)>15) d.envPickGt15++;
-      } else if(isCan){
+        // tao = tiempo activo (enviada a asignada aprox)
+        const tao=parseFloat(o.tao)||null;
+        if(tao!==null&&tao>0){d.t1.push(tao);d.byCity[city].t1.push(tao);}
+        // Para env+pick>15min usamos tao como proxy de t1
+        if(tao!==null&&tao>15) d.envPickGt15++;
+ 
+      } else if(isCan(state)){
         d.can++; d.byCity[city].can++;
-        const minsAlive=minsSince(o);
-        if(minsAlive!==null){
-          if(minsAlive<15){d.canLt15++;d.byCity[city].canLt15++;}
-          else{d.canGt15++;d.byCity[city].canGt15++;}
-        }
-        const brand=(o.businessName||o.merchant||o.marca||'—').trim();
-        const store=(o.storeName||o.store||o.tienda||'—').trim();
-        const km=parseFloat(o.distance||o.km||o.distanceKm||0)||0;
-        const tCancel=minsAlive||0;
-        const hora=new Date(o.createdAt||o.created_at||o.sendAt||Date.now()).getHours();
-        d.canceladas.push({id:id,brand,city,store,km,tCan:tCancel,hora,
+        // tp en canceladas = minutos desde creación hasta cancelación
+        const tCancel=parseFloat(o.tp)||0;
+        if(tCancel<15){d.canLt15++;d.byCity[city].canLt15++;}
+        else{d.canGt15++;d.byCity[city].canGt15++;}
+ 
+        const brand=(o.businessName||'—').trim();
+        const store=(o.branchOfficeName||'—').trim();
+        const km=parseFloat(o.distance||o.km||0)||0;
+        const hora=created?new Date(created.replace(' ','T')).getHours():new Date().getHours();
+        d.canceladas.push({id,brand,city,store,km,tCan:tCancel,hora,
           tramo:tCancel<5?'<5 min':tCancel<15?'5–15 min':'>15 min'});
       } else {
         d.otros++; d.byCity[city].otros++;
       }
     }
   });
-
-  // Snapshot activos (incluye múltiples llamadas, siempre fresco)
-  S.active=ords.filter(o=>{
-    const st=(o.status||o.estado||'').toLowerCase();
-    return !['completed','finalizada','delivered','entregada','done','cancelled','cancelada','canceled'].includes(st);
-  });
+ 
+  // Snapshot de activos (siempre fresco con la última llamada)
+  S.active=ords.filter(o=>isActive(o.state||o.status||o.estado||''));
 }
-
+ 
 function calcTimes(o){
   const ts=k=>{const v=o[k]||o[toCam(k)]||o[toSnk(k)];return v?new Date(v).getTime():null;};
   const sent=ts('sentAt')||ts('sendAt')||ts('enviadaAt');
@@ -870,12 +890,15 @@ function calcTimes(o){
     tTotal:sent&&fin?(fin-sent)/60000:null
   };
 }
-
+ 
 function minsSince(o){
-  const v=o.sentAt||o.sendAt||o.createdAt||o.created_at;
-  return v?(Date.now()-new Date(v).getTime())/60000:null;
+  // tp ya viene calculado en minutos desde el API de Armi
+  const tp=parseFloat(o.tp);
+  if(!isNaN(tp)&&tp>=0) return tp;
+  const v=o.createDate||o.createdAt||o.created_at;
+  return v?(Date.now()-new Date(v.replace(' ','T')).getTime())/60000:null;
 }
-
+ 
 function toCam(s){return s.replace(/_([a-z])/g,(_,c)=>c.toUpperCase());}
 function toSnk(s){return s.replace(/([A-Z])/g,'_$1').toLowerCase();}
 function avg(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;}
@@ -886,52 +909,58 @@ function det(id,num,den,lblNum,lblDen){
   if(!el) return;
   el.innerHTML=`<span>${num}</span> órdenes`;
 }
-
+ 
 // ═══════════════════════════════
 //  ENCOLAMIENTO HELPERS
 // ═══════════════════════════════
 function encolCiudad() {
   const map={};
   S.active.forEach(o=>{
-    const k=(o.city||o.ciudad||o.cityName||'Desconocida').trim();
+    const cityId=(o.cityId||o.city||'').trim();
+    const k=cityName(cityId);
     if(!map[k]) map[k]={env:0,asig:0,ot:0,taos:[],gt30:0};
-    const st=(o.status||o.estado||'').toLowerCase();
-    if(['sent','enviada','sending','sending_to_rider'].includes(st)) map[k].env++;
-    else if(['assigned','asignada'].includes(st)) map[k].asig++;
+    const state=o.state||o.status||o.estado||'';
+    if(isEnv(state)) map[k].env++;
+    else if(isAsig(state)) map[k].asig++;
     else map[k].ot++;
-    // TAO actual
-    const sent=o.sentAt||o.sendAt||o.createdAt||o.created_at;
-    if(sent){const tao=(Date.now()-new Date(sent).getTime())/60000;map[k].taos.push(tao);if(tao>30)map[k].gt30++;}
+    // tao ya viene calculado en minutos desde el API
+    const tao=parseFloat(o.tao)||0;
+    map[k].taos.push(tao);
+    if(tao>30) map[k].gt30++;
   });
   const cities=Object.entries(map).map(([k,d])=>{
     const tot=d.env+d.asig+d.ot;
     const tao=d.taos.length?d.taos.reduce((a,b)=>a+b,0)/d.taos.length:0;
     return{key:k,env:d.env,asig:d.asig,tot,gt30:d.gt30,tao,pct:tot?Math.round(d.env/tot*100):0};
   }).sort((a,b)=>b.pct-a.pct||b.tot-a.tot);
-  // Totales generales
-  const allActive=S.active;
+  // Totales
   let tEnv=0,tAsig=0,tOt=0,tGt30=0,allTaos=[];
-  allActive.forEach(o=>{
-    const st=(o.status||o.estado||'').toLowerCase();
-    if(['sent','enviada','sending','sending_to_rider'].includes(st)) tEnv++;
-    else if(['assigned','asignada'].includes(st)) tAsig++;
+  S.active.forEach(o=>{
+    const state=o.state||o.status||o.estado||'';
+    if(isEnv(state)) tEnv++;
+    else if(isAsig(state)) tAsig++;
     else tOt++;
-    const sent=o.sentAt||o.sendAt||o.createdAt||o.created_at;
-    if(sent){const tao=(Date.now()-new Date(sent).getTime())/60000;allTaos.push(tao);if(tao>30)tGt30++;}
+    const tao=parseFloat(o.tao)||0;
+    allTaos.push(tao);
+    if(tao>30) tGt30++;
   });
   const tot=tEnv+tAsig+tOt;
   const tao=allTaos.length?allTaos.reduce((a,b)=>a+b,0)/allTaos.length:0;
   return{cities,total:{env:tEnv,asig:tAsig,tot,gt30:tGt30,tao,pct:tot?Math.round(tEnv/tot*100):0}};
 }
-
+ 
 function encol(group, keyField) {
   const map={};
   S.active.forEach(o=>{
-    const k=(o[keyField]||'?').trim();
+    // Mapeo real de campos Armi
+    let k;
+    if(keyField==='businessName') k=(o.businessName||'?').trim();
+    else if(keyField==='cityId') k=cityName((o.cityId||o.city||'').trim());
+    else k=(o[keyField]||'?').trim();
     if(!map[k]) map[k]={env:0,asig:0,ot:0};
-    const st=(o.status||o.estado||'').toLowerCase();
-    if(['sent','enviada','sending','sending_to_rider'].includes(st)) map[k].env++;
-    else if(['assigned','asignada'].includes(st)) map[k].asig++;
+    const state=o.state||o.status||o.estado||'';
+    if(isEnv(state)) map[k].env++;
+    else if(isAsig(state)) map[k].asig++;
     else map[k].ot++;
   });
   return Object.entries(map).map(([k,d])=>{
@@ -939,17 +968,17 @@ function encol(group, keyField) {
     return{key:k,env:d.env,asig:d.asig,tot,pct:tot?Math.round(d.env/tot*100):0};
   }).sort((a,b)=>b.pct-a.pct||b.tot-a.tot);
 }
-
+ 
 function encolTienda() {
   const map={};
   S.active.forEach(o=>{
-    const k=(o.storeName||o.store||o.tienda||'?').trim();
-    const brand=(o.businessName||o.merchant||o.marca||'—').trim();
-    const city=(o.city||o.ciudad||'—').trim();
+    const k=(o.branchOfficeName||o.storeName||o.store||'?').trim();
+    const brand=(o.businessName||'—').trim();
+    const city=cityName((o.cityId||o.city||'').trim());
     if(!map[k]) map[k]={brand,city,env:0,asig:0,ot:0};
-    const st=(o.status||o.estado||'').toLowerCase();
-    if(['sent','enviada','sending'].includes(st)) map[k].env++;
-    else if(['assigned','asignada'].includes(st)) map[k].asig++;
+    const state=o.state||o.status||o.estado||'';
+    if(isEnv(state)) map[k].env++;
+    else if(isAsig(state)) map[k].asig++;
     else map[k].ot++;
   });
   return Object.entries(map).map(([k,d])=>{
@@ -957,22 +986,22 @@ function encolTienda() {
     return{store:k,brand:d.brand,city:d.city,env:d.env,asig:d.asig,tot,pct:tot?Math.round(d.env/tot*100):0};
   }).sort((a,b)=>b.pct-a.pct||b.tot-a.tot);
 }
-
+ 
 // ═══════════════════════════════
 //  RENDER
 // ═══════════════════════════════
 function cls(p){return p<15?'g':p<40?'y':'r';}
-
+ 
 function bar(p){
   const c=cls(p);
   return`<div class="pw"><div class="pb"><div class="pf ${c}" style="width:${Math.min(p,100)}%"></div></div><div class="pp ${c}">${p}%</div></div>`;
 }
-
+ 
 function render(){
   const d=S.day;
   const tc=d.total||1;
   const fc=d.fin||1;
-
+ 
   // KPIs
   set('k-fin',d.fin);
   set('k-can',d.can);
@@ -992,7 +1021,7 @@ function render(){
   set('k-t4',fmt(avg(d.t4)));
   set('k-envpick15',pct(d.envPickGt15,d.fin)+'%');
   det('d-envpick15', d.envPickGt15, d.fin, 'env+pick>15', 'finalizadas');
-
+ 
   // Encolamiento ciudad — con fila TOTAL y columnas TAO y >30min
   const cius=encolCiudad();
   set('cnt-ciu',`${cius.cities.length} ciudades`);
@@ -1014,37 +1043,37 @@ function render(){
     </tr>`).join('')
     :'<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin órdenes activas</td></tr>';
   document.getElementById('tb-ciu').innerHTML=totalRow+cityRows;
-
+ 
   // Encolamiento marca
   const mrcs=encol(S.active,'businessName');
   set('cnt-mrc',`${mrcs.length} marcas`);
   renderEncol('tb-mrc', mrcs, r=>`<tr><td>${r.key}</td><td>${bar(r.pct)}</td><td>${r.env}</td><td>${r.asig}</td><td><strong>${r.tot}</strong></td></tr>`, 5);
-
+ 
   // Encolamiento tienda
   const ties=encolTienda();
   set('cnt-tie',`${ties.length} tiendas`);
   renderEncol('tb-tie', ties, r=>`<tr><td>${r.store}</td><td><span style="color:var(--text3);font-size:11px">${r.brand}</span></td><td><span style="color:var(--text3);font-size:11px">${r.city}</span></td><td>${bar(r.pct)}</td><td>${r.env}</td><td>${r.asig}</td><td><strong>${r.tot}</strong></td></tr>`, 7);
-
+ 
   // Deep ciudad
   renderDeepCiudad();
-
+ 
   // Deep KM/TP
   renderDeepOrdenes();
   // Sin movimiento + canceladas
   renderAlertas2();
 }
-
+ 
 function renderEncol(tbId, rows, rowFn, cols) {
   const el=document.getElementById(tbId);
   if(!rows.length){el.innerHTML=`<tr><td colspan="${cols}" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin órdenes activas</td></tr>`;return;}
   el.innerHTML=rows.map(rowFn).join('');
 }
-
+ 
 function renderDeepCiudad() {
   const d=S.day;
   const cities=Object.keys(d.byCity).sort();
   set('cnt-deepciu',`${cities.length} ciudades`);
-
+ 
   // Calcular encolamiento activo por ciudad
   const enColCiu={};
   S.active.forEach(o=>{
@@ -1054,10 +1083,10 @@ function renderDeepCiudad() {
     if(['sent','enviada','sending'].includes(st)) enColCiu[city].env++;
     enColCiu[city].tot++;
   });
-
+ 
   const tbody=document.getElementById('tb-deepciu-body');
   if(!cities.length){tbody.innerHTML=`<tr><td colspan="10" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono)">Sin datos</td></tr>`;return;}
-
+ 
   tbody.innerHTML=cities.map(city=>{
     const c=d.byCity[city];
     const ec=enColCiu[city]||{env:0,tot:0};
@@ -1082,7 +1111,7 @@ function renderDeepCiudad() {
       <td>${ec.tot}</td>
     </tr>`;
   }).join('');
-
+ 
   // Tiempos por ciudad
   const tbody2=document.getElementById('tb-tiempociu-body');
   tbody2.innerHTML=cities.map(city=>{
@@ -1105,28 +1134,28 @@ function renderDeepCiudad() {
     </tr>`;
   }).join('');
 }
-
+ 
 function renderDeepOrdenes() {
   // Calcular TAO de cada orden activa
   const withTao = S.active.map(o=>{
     const sent=o.sentAt||o.sendAt||o.createdAt||o.created_at;
     const tao=sent?(Date.now()-new Date(sent).getTime())/60000:null;
-    const km=parseFloat(o.distance||o.km||o.distanceKm||o.kilometers||0)||0;
-    const id=o.id||o.orderId||o.order_id||'—';
+    const km=parseFloat(o.distance||o.distance||0)||0;
+    const id=o.orderId||o.id||'—';
     return{id,tao,km,o};
   }).filter(x=>x.tao!==null);
-
+ 
   // KM buckets
   const km0=withTao.filter(x=>x.km>=0&&x.km<4).sort((a,b)=>b.tao-a.tao);
   const km4=withTao.filter(x=>x.km>=4&&x.km<6).sort((a,b)=>b.tao-a.tao);
   const km6=withTao.filter(x=>x.km>=6&&x.km<8).sort((a,b)=>b.tao-a.tao);
   const km8=withTao.filter(x=>x.km>=8).sort((a,b)=>b.tao-a.tao);
-
+ 
   // TP buckets
   const tp30=withTao.filter(x=>x.tao>=30&&x.tao<45).sort((a,b)=>b.tao-a.tao);
   const tp45=withTao.filter(x=>x.tao>=45&&x.tao<60).sort((a,b)=>b.tao-a.tao);
   const tp60=withTao.filter(x=>x.tao>=60).sort((a,b)=>b.tao-a.tao);
-
+ 
   renderOidCol('deep-km0','cnt-km0',km0,'b',x=>`${x.km.toFixed(1)} km | ${x.tao.toFixed(0)} min`);
   renderOidCol('deep-km4','cnt-km4',km4,'g',x=>`${x.km.toFixed(1)} km | ${x.tao.toFixed(0)} min`);
   renderOidCol('deep-km6','cnt-km6',km6,'y',x=>`${x.km.toFixed(1)} km | ${x.tao.toFixed(0)} min`);
@@ -1135,7 +1164,7 @@ function renderDeepOrdenes() {
   renderOidCol('deep-tp45','cnt-tp45',tp45,'y',x=>`${x.tao.toFixed(0)} min`);
   renderOidCol('deep-tp60','cnt-tp60',tp60,'r',x=>`${x.tao.toFixed(0)} min`);
 }
-
+ 
 function renderOidCol(colId,cntId,rows,colorCls,valFn){
   const el=document.getElementById(colId);
   const cnt=document.getElementById(cntId);
@@ -1147,9 +1176,9 @@ function renderOidCol(colId,cntId,rows,colorCls,valFn){
       <span class="oid-val ${colorCls==='g'?'lbl-green':colorCls==='y'?'lbl-yellow':colorCls==='b'?'lbl-armi':'lbl-red'}">${valFn(x)}</span>
     </div>`).join('');
 }
-
+ 
 function set(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
-
+ 
 // ═══════════════════════════════
 //  DEMO DATA
 // ═══════════════════════════════
@@ -1159,18 +1188,18 @@ function demoData(){
   d.canLt15=9;d.canGt15=29;d.gt60fin=22;
   d.t1=rnd(80,5,13);d.t2=rnd(80,3,9);d.t3=rnd(80,4,14);d.t4=rnd(80,10,20);
   d.tTotal=rnd(80,25,55);
-
+ 
   const brands=['Takami','El Corral','Sipote Burrito','Veccina','Central Cevichería'];
   const cities=['Bogotá','Medellín','Cartagena','Pereira','Barranquilla','Cali','Bucaramanga','Chía'];
   const stores=['Osaki 118','Osaki Calle 71','Centro Mayor','Manga','Av. Las Américas','El Corral 93','El Corral Andino','Sipote 140','Veccina Av 19'];
   const statuses=['sent','sent','sent','assigned','assigned','picking','picking_terminated'];
-
+ 
   // Poblar byCity
   cities.forEach(c=>{
     d.byCity[c]={fin:Math.floor(15+Math.random()*60),can:Math.floor(2+Math.random()*15),otros:Math.floor(3+Math.random()*20),total:0,canLt15:Math.floor(Math.random()*5),canGt15:Math.floor(Math.random()*10),gt60:Math.floor(Math.random()*8),t1:rnd(15,5,12),t2:rnd(15,3,8),t3:rnd(15,4,14),t4:rnd(15,10,22),tTotal:rnd(15,25,55)};
     d.byCity[c].total=d.byCity[c].fin+d.byCity[c].can+d.byCity[c].otros;
   });
-
+ 
   // Poblar canceladas demo
   const dBrands=['Takami','El Corral','Sipote Burrito','Veccina'];
   const dCities=['Bogotá','Medellín','Cartagena','Pereira','Barranquilla'];
@@ -1183,7 +1212,7 @@ function demoData(){
       store:dStores[i%dStores.length],km:1+Math.random()*10,tCan,hora,
       tramo:tCan<5?'<5 min':tCan<15?'5–15 min':'>15 min'};
   });
-
+ 
   S.active=Array(68).fill(0).map((_,i)=>({
     id:`5${400000+i}`,
     businessName:brands[i%brands.length],
@@ -1194,22 +1223,19 @@ function demoData(){
     sentAt:new Date(Date.now()-(10+Math.random()*80)*60000).toISOString()
   }));
 }
-
+ 
 function renderAlertas2(){
   const umbral=parseInt(document.getElementById('umbralMin').value)||15;
-
+ 
   // ── ÓRDENES SIN MOVIMIENTO ──────────────────────────────
   const sinMov=S.active.filter(o=>{
-    const st=(o.status||o.estado||'').toLowerCase();
-    if(!['sent','enviada','sending','sending_to_rider'].includes(st)) return false;
-    const sent=o.sentAt||o.sendAt||o.createdAt||o.created_at;
-    if(!sent) return false;
-    return (Date.now()-new Date(sent).getTime())/60000 >= umbral;
+    if(!isEnv(o.state||o.status||o.estado||'')) return false;
+    const tao=parseFloat(o.tao)||0;
+    return tao >= umbral;
   }).map(o=>{
-    const sent=o.sentAt||o.sendAt||o.createdAt||o.created_at;
-    const mins=(Date.now()-new Date(sent).getTime())/60000;
+    const tao=parseFloat(o.tao)||0;
     return{
-      id:o.id||o.orderId||'—',
+      id:o.orderId||o.id||'—',
       brand:(o.businessName||o.merchant||o.marca||'—').trim(),
       city:(o.city||o.ciudad||'—').trim(),
       store:(o.storeName||o.store||'—').trim(),
@@ -1218,7 +1244,7 @@ function renderAlertas2(){
       st:(o.status||o.estado||'').trim()
     };
   }).sort((a,b)=>b.mins-a.mins);
-
+ 
   set('cnt-sinmov',`${sinMov.length} órdenes sin movimiento`);
   const tbSM=document.getElementById('tb-sinmov');
   if(!sinMov.length){
@@ -1237,11 +1263,11 @@ function renderAlertas2(){
       </tr>`;
     }).join('');
   }
-
+ 
   // ── CANCELADAS DEL DÍA ─────────────────────────────────
   const cans=S.day.canceladas;
   const nCan=cans.length;
-
+ 
   set('can-total',nCan);
   const lt5=cans.filter(x=>x.tCan<5).length;
   const m5_15=cans.filter(x=>x.tCan>=5&&x.tCan<15).length;
@@ -1251,7 +1277,7 @@ function renderAlertas2(){
   set('can-5-15',m5_15);
   set('can-gt15',gt15);
   set('can-tprom',tProm.toFixed(1)+' min');
-
+ 
   // Ciudad top
   const byCiu={};
   cans.forEach(x=>{if(!byCiu[x.city])byCiu[x.city]={n:0,lt5:0,m515:0,gt15:0,ts:[]};
@@ -1263,7 +1289,7 @@ function renderAlertas2(){
   });
   const ciuArr=Object.entries(byCiu).map(([k,v])=>({k,n:v.n,lt5:v.lt5,m515:v.m515,gt15:v.gt15,tp:v.ts.reduce((a,b)=>a+b,0)/v.ts.length})).sort((a,b)=>b.n-a.n);
   if(ciuArr.length){set('can-ciudad-top',ciuArr[0].k);set('can-ciudad-top-n',`${ciuArr[0].n} canceladas`);}
-
+ 
   // Tabla ciudad
   const tbCC=document.getElementById('tb-can-ciudad');
   tbCC.innerHTML=ciuArr.length
@@ -1276,7 +1302,7 @@ function renderAlertas2(){
         <td style="font-family:var(--mono)">${r.tp.toFixed(1)} min</td>
       </tr>`).join('')
     :'<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin canceladas hoy</td></tr>';
-
+ 
   // Tabla marca
   const byMrc={};
   cans.forEach(x=>{if(!byMrc[x.brand])byMrc[x.brand]={n:0,lt5:0,m515:0,gt15:0,ts:[]};
@@ -1298,7 +1324,7 @@ function renderAlertas2(){
         <td style="font-family:var(--mono)">${r.tp.toFixed(1)} min</td>
       </tr>`).join('')
     :'<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin canceladas hoy</td></tr>';
-
+ 
   // Heatmap horario
   const byHora=Array(24).fill(0);
   cans.forEach(x=>{ if(x.hora>=0&&x.hora<24) byHora[x.hora]++; });
@@ -1325,7 +1351,7 @@ function renderAlertas2(){
     </div>`;
   }).join('');
   lDiv.innerHTML=horas.map(h=>`<div style="flex:1;text-align:center;font-family:var(--mono);font-size:9px;color:var(--text3)">${h}h</div>`).join('');
-
+ 
   // Detalle últimas 50
   const ultimas=cans.slice(-50).reverse();
   const tbCD=document.getElementById('tb-can-detalle');
@@ -1344,9 +1370,9 @@ function renderAlertas2(){
     }).join('')
     :'<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin canceladas registradas hoy</td></tr>';
 }
-
+ 
 function rnd(n,min,max){return Array(n).fill(0).map(()=>min+Math.random()*(max-min));}
-
+ 
 // ═══════════════════════════════
 //  ERROR
 // ═══════════════════════════════
@@ -1358,7 +1384,7 @@ function showErr(m){
     <span style="opacity:.8;font-size:10px">Se muestran datos de demostración.${isCors?' — <strong>Si ves CORS</strong>: el API debe habilitar acceso desde el navegador. Solución rápida: agrega el header <code>Access-Control-Allow-Origin: *</code> en el API de Armi, o usa un proxy CORS.':''}</span>`;
 }
 function hideErr(){document.getElementById('errBox').style.display='none';}
-
+ 
 // ═══════════════════════════════
 //  TIMER
 // ═══════════════════════════════
@@ -1367,7 +1393,7 @@ function startTimer(){
   S.timer=setInterval(fetchNow,parseInt(document.getElementById('isel').value));
 }
 document.getElementById('isel').addEventListener('change',startTimer);
-
+ 
 // ── TEMA ──────────────────────────────────
 function toggleTheme(){
   const body=document.body;
@@ -1385,7 +1411,7 @@ function toggleTheme(){
     document.getElementById('themeLabel').textContent='CLARO';
   }
 })();
-
+ 
 // INIT
 fetchNow();
 startTimer();
