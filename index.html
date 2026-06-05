@@ -199,9 +199,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     <div class="sdot" id="sdot"></div>
     <div class="lupd" id="lupd">Sin datos aún</div>
     <select class="isel" id="isel">
+      <option value="300000">↻ 5 min</option>
       <option value="600000">↻ 10 min</option>
       <option value="1800000">↻ 30 min</option>
-      <option value="60000">↻ 1 min (dev)</option>
+      <option value="3600000">↻ 1 hora</option>
+      <option value="28800000">↻ 8 horas</option>
     </select>
     <button class="btn pri" onclick="fetchNow()">↻ Actualizar</button>
     <div class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
@@ -216,17 +218,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
  
 <!-- CONFIG -->
 <div class="cfg">
-  <div class="cfl" style="max-width:300px">
-    <label>Endpoint API</label>
-    <input class="cfi" id="cfEndpoint" value="https://tu-armi.com/business-monitor/order/filter"/>
-  </div>
-  <div class="cfl" style="max-width:200px">
-    <label>API Key</label>
-    <input class="cfi" id="cfKey" type="password" value="87efc80c-f21a-4e76-8a80-7eae5575720c"/>
-  </div>
+  <!-- Endpoint y API Key fijos — ocultos para usuarios finales -->
+  <input type="hidden" id="cfEndpoint" value="https://tu-armi.com/business-monitor/order/filter"/>
+  <input type="hidden" id="cfKey" value="87efc80c-f21a-4e76-8a80-7eae5575720c"/>
   <div class="cfl" style="max-width:80px">
     <label>País</label>
-    <input class="cfi" id="cfCountry" value="CO"/>
+    <input class="cfi" id="cfCountry" value="COL"/>
   </div>
   <div class="cfl" style="max-width:90px">
     <label>Page size</label>
@@ -649,7 +646,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         <table class="tbl">
           <thead><tr>
             <th>Order ID</th><th>Marca</th><th>Ciudad</th><th>Tienda</th>
-            <th class="r">T cancel.</th><th class="r">Tramo</th>
+            <th class="r">Hora cancel.</th><th class="r">T cancel.</th><th class="r">Tramo</th>
           </tr></thead>
           <tbody id="tb-can-detalle">
             <tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Cargando…</td></tr>
@@ -878,7 +875,8 @@ function process(ords) {
         const brand=(o.businessName||'—').trim();
         const store=(o.branchOfficeName||'—').trim();
         const km=parseFloat(o.distance||0)||0;
-        const hora=parseInt((o.createDate||'00:00').split(' ')[1]||'0')||0;
+        const horaRaw=(o.createDate||'').split(' ')[1]||'00:00';
+        const hora=horaRaw.slice(0,5); // HH:MM
         d.canceladas.push({id,brand,city,store,km,tCan:tCancel,hora,
           tramo:tCancel<5?'<5 min':tCancel<15?'5–15 min':'>15 min'});
       } else {
@@ -1113,10 +1111,9 @@ function renderDeepCiudad() {
   // Calcular encolamiento activo por ciudad
   const enColCiu={};
   S.active.forEach(o=>{
-    const city=(o.city||o.ciudad||'Desconocida').trim();
+    const city=cityName((o.cityId||o.city||'').trim());
     if(!enColCiu[city]) enColCiu[city]={env:0,tot:0};
-    const st=(o.status||o.estado||'').toLowerCase();
-    if(['sent','enviada','sending'].includes(st)) enColCiu[city].env++;
+    if(isEnv(o.state||o.status||'')) enColCiu[city].env++;
     enColCiu[city].tot++;
   });
  
@@ -1172,14 +1169,13 @@ function renderDeepCiudad() {
 }
  
 function renderDeepOrdenes() {
-  // Calcular TAO de cada orden activa
+  // tao y distance vienen directamente del API de Armi
   const withTao = S.active.map(o=>{
-    const sent=o.sentAt||o.sendAt||o.createdAt||o.created_at;
-    const tao=sent?(Date.now()-new Date(sent).getTime())/60000:null;
-    const km=parseFloat(o.distance||o.distance||0)||0;
+    const tao=parseFloat(o.tao)||0;
+    const km=parseFloat(o.distance)||0;
     const id=o.orderId||o.id||'—';
     return{id,tao,km,o};
-  }).filter(x=>x.tao!==null);
+  }).filter(x=>x.tao>0||x.km>0);
  
   // KM buckets
   const km0=withTao.filter(x=>x.km>=0&&x.km<4).sort((a,b)=>b.tao-a.tao);
@@ -1395,16 +1391,18 @@ function renderAlertas2(){
     ?ultimas.map(x=>{
       const tc=x.tCan;
       const col=tc<5?'var(--yellow-t)':tc<15?'var(--text2)':'var(--red-t)';
+      const horaStr=x.hora||'—';
       return`<tr>
         <td style="font-family:var(--mono);font-weight:700">#${x.id}</td>
         <td>${x.brand}</td>
         <td>${x.city}</td>
         <td style="font-size:11px;color:var(--text3)">${x.store}</td>
+        <td style="font-family:var(--mono);color:var(--text2)">${horaStr}</td>
         <td style="font-weight:700;color:${col}">${tc.toFixed(1)} min</td>
         <td><span class="badge ${tc<5?'yellow':tc<15?'neutral':'red'}">${x.tramo}</span></td>
       </tr>`;
     }).join('')
-    :'<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin canceladas registradas hoy</td></tr>';
+    :'<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin canceladas registradas hoy</td></tr>';
 }
  
 function rnd(n,min,max){return Array(n).fill(0).map(()=>min+Math.random()*(max-min));}
