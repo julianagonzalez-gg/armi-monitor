@@ -731,13 +731,9 @@ function switchTab(name) {
 //  FETCH
 // ═══════════════════════════════
 async function fetchAll() {
-  // Paginación inteligente por fecha:
-  // El API ordena de más reciente a más antigua.
-  // Seguimos pidiendo páginas mientras las órdenes sean de HOY.
-  // Al encontrar una orden de ayer, paramos — tenemos el día completo.
   const c=cfg();
-  const today=localToday();
   let page=1, all=[], more=true, maxPages=100;
+  let todayStr=null; // Lo fijamos desde la PRIMERA orden del API
   const lupd=document.getElementById('lupd');
  
   while(more && page<=maxPages){
@@ -746,29 +742,35 @@ async function fetchAll() {
     let r;
     try{ r=await fetch('/api/proxy?'+params); }
     catch(e){ throw new Error('No se pudo conectar al proxy. '+e.message); }
-    if(r.status===401||r.status===403) throw new Error('API Key inválida (HTTP '+r.status+').');
-    if(r.status===404) throw new Error('Proxy no encontrado. Verifica api/proxy.js en el repo.');
     if(!r.ok){let det='';try{const j=await r.json();det=j.detail||j.error||'';}catch(e){}throw new Error('Error HTTP '+r.status+'. '+det);}
     let d;
     try{ d=await r.json(); }catch(e){ throw new Error('Respuesta no válida del proxy.'); }
     if(d.error) throw new Error(d.error+(d.detail?' — '+d.detail:''));
  
-    // Estructura real: { data: { orders: [], pagination: { totalPages } } }
     const ords=Array.isArray(d)?d:(d.data&&d.data.orders)?d.data.orders:(d.orders||d.data||d.results||[]);
-    if(page===1&&ords.length===0) throw new Error('El API respondió sin órdenes. Verifica COUNTRY (COL) y API key.');
-    // Fijar fecha de hoy desde la primera orden real del API (hora Colombia)
-    if(page===1) setTodayFromOrders(ords);
+    if(page===1){
+      if(ords.length===0) throw new Error('El API respondió sin órdenes. Verifica COUNTRY y API key.');
+      // Fijamos "hoy" desde la primera orden — hora Colombia directa del servidor de Armi
+      todayStr=(ords[0].createDate||'').slice(0,10);
+      window._armiTodayDate=todayStr;
+      // Las órdenes activas para encolamiento = página 1 (las más recientes = tiempo real)
+      // Las filtramos aquí y las guardamos en S.active antes de paginar el día completo
+      S.active=ords.filter(o=>{
+        const st=(o.state||o.status||'').toUpperCase().trim();
+        return st!=='FINALIZADA'&&st!=='CANCELADA';
+      });
+    }
  
     all=all.concat(ords);
  
-    // Revisar si la última orden ya es de ayer → tenemos todo el día de hoy
+    // ¿La última orden de esta página es de ayer? → ya tenemos todo el día
     const lastDate=(ords[ords.length-1]||{}).createDate||'';
-    const hitYesterday=lastDate&&!lastDate.startsWith(today);
+    const hitYesterday=todayStr && lastDate && !lastDate.startsWith(todayStr);
  
     const pagination=d.data&&d.data.pagination||null;
     const totalPages=pagination?pagination.totalPages:(d.totalPages||null);
  
-    if(hitYesterday||ords.length<c.ps||(totalPages&&page>=totalPages)){
+    if(hitYesterday || ords.length<c.ps || (totalPages&&page>=totalPages)){
       more=false;
     } else {
       page++;
@@ -781,6 +783,13 @@ async function fetchNow() {
   const dot=document.getElementById('sdot');
   dot.style.background='var(--yellow-t)';
   hideErr();
+  // ── Reiniciar estado del día en cada actualización ──
+  // Traemos TODO el día de nuevo desde el API, así que reseteamos los contadores
+  S.day={fin:0,can:0,otros:0,total:0,canLt15:0,canGt15:0,gt60fin:0,envPickGt15:0,
+    canceladas:[],t1:[],t2:[],t3:[],t4:[],tTotal:[],byCity:{}};
+  S.seen=new Set();
+  S.active=[];
+  window._armiTodayDate=null;
   try{
     const ords=await fetchAll();
     process(ords);
@@ -824,66 +833,63 @@ function isEnv(state){ return (state||'').toUpperCase().trim()==='ENVIADA'; }
 function isAsig(state){ return (state||'').toUpperCase().trim()==='ASIGNADA'; }
  
 function process(ords) {
-  const today=localToday();
+  // "hoy" viene fijado desde la primera orden del API en fetchAll
+  const today=window._armiTodayDate||localToday();
   const d=S.day;
  
   ords.forEach(o=>{
-    // ── Campos reales del API de Armi ──
     const id=o.orderId||o.businessOrderId||o.id;
     if(!id) return;
  
-    // Solo órdenes de hoy
-    const created=o.createDate||o.createdAt||o.created_at||'';
-    if(created&&!created.startsWith(today)) return;
+    // Filtrar solo órdenes de hoy usando createDate del API
+    const created=(o.createDate||'').slice(0,10);
+    if(created && created!==today) return;
  
-    // Ciudad: viene como código (BOG, BAR, ALI...) — lo convertimos a nombre
     const cityId=(o.cityId||o.city||'').trim();
     const city=cityName(cityId);
     if(!d.byCity[city]) d.byCity[city]={fin:0,can:0,otros:0,total:0,canLt15:0,canGt15:0,gt60:0,t1:[],t2:[],t3:[],t4:[],tTotal:[],env:0,asig:0};
  
-    const state=o.state||o.status||o.estado||'';
+    const state=(o.state||o.status||'').toUpperCase().trim();
  
     if(!S.seen.has(id)){
       S.seen.add(id);
       d.total++;
       d.byCity[city].total++;
  
-      if(isFin(state)){
-        d.fin++; d.byCity[city].fin++;
-        // tp = tiempo total en minutos (ya calculado por Armi)
-        const tTotal=parseFloat(o.tp)||null;
-        if(tTotal!==null&&tTotal>0){
-          d.tTotal.push(tTotal);
-          d.byCity[city].tTotal.push(tTotal);
-          if(tTotal>60){d.gt60fin++;d.byCity[city].gt60++;}
+      if(state==='FINALIZADA'){
+        d.fin++;
+        d.byCity[city].fin++;
+        const tp=parseFloat(o.tp)||0;
+        if(tp>0){
+          d.tTotal.push(tp);
+          d.byCity[city].tTotal.push(tp);
+          if(tp>60){ d.gt60fin++; d.byCity[city].gt60++; }
         }
-        // tao = tiempo activo (enviada a asignada aprox)
-        const tao=parseFloat(o.tao)||null;
-        if(tao!==null&&tao>0){d.t1.push(tao);d.byCity[city].t1.push(tao);}
-        // Para env+pick>15min usamos tao como proxy de t1
-        if(tao!==null&&tao>15) d.envPickGt15++;
+        const tao=parseFloat(o.tao)||0;
+        if(tao>0){ d.t1.push(tao); d.byCity[city].t1.push(tao); }
+        if(tao>15) d.envPickGt15++;
  
-      } else if(isCan(state)){
-        d.can++; d.byCity[city].can++;
-        // tp en canceladas = minutos desde creación hasta cancelación
+      } else if(state==='CANCELADA'){
+        d.can++;
+        d.byCity[city].can++;
         const tCancel=parseFloat(o.tp)||0;
-        if(tCancel<15){d.canLt15++;d.byCity[city].canLt15++;}
-        else{d.canGt15++;d.byCity[city].canGt15++;}
- 
+        if(tCancel<15){ d.canLt15++; d.byCity[city].canLt15++; }
+        else { d.canGt15++; d.byCity[city].canGt15++; }
         const brand=(o.businessName||'—').trim();
         const store=(o.branchOfficeName||'—').trim();
-        const km=parseFloat(o.distance||o.km||0)||0;
-        const hora=created?new Date(created.replace(' ','T')).getHours():new Date().getHours();
+        const km=parseFloat(o.distance||0)||0;
+        const hora=parseInt((o.createDate||'00:00').split(' ')[1]||'0')||0;
         d.canceladas.push({id,brand,city,store,km,tCan:tCancel,hora,
           tramo:tCancel<5?'<5 min':tCancel<15?'5–15 min':'>15 min'});
       } else {
-        d.otros++; d.byCity[city].otros++;
+        d.otros++;
+        d.byCity[city].otros++;
       }
     }
   });
  
-  // Snapshot de activos (siempre fresco con la última llamada)
-  S.active=ords.filter(o=>isActive(o.state||o.status||o.estado||''));
+  // S.active ya fue asignado desde la página 1 en fetchAll (tiempo real)
+  // No lo sobreescribimos aquí para no mezclar órdenes viejas del día
 }
  
 function calcTimes(o){
