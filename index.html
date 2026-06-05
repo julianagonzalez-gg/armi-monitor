@@ -736,7 +736,7 @@ async function fetchAll() {
   // Seguimos pidiendo páginas mientras las órdenes sean de HOY.
   // Al encontrar una orden de ayer, paramos — tenemos el día completo.
   const c=cfg();
-  const today=new Date().toISOString().slice(0,10);
+  const today=localToday();
   let page=1, all=[], more=true, maxPages=100;
   const lupd=document.getElementById('lupd');
  
@@ -822,7 +822,7 @@ function isEnv(state){ return (state||'').toUpperCase().trim()==='ENVIADA'; }
 function isAsig(state){ return (state||'').toUpperCase().trim()==='ASIGNADA'; }
  
 function process(ords) {
-  const today=new Date().toISOString().slice(0,10);
+  const today=localToday();
   const d=S.day;
  
   ords.forEach(o=>{
@@ -909,6 +909,13 @@ function minsSince(o){
 }
  
 function toCam(s){return s.replace(/_([a-z])/g,(_,c)=>c.toUpperCase());}
+// Fecha local (Colombia UTC-5) en formato YYYY-MM-DD
+function localToday(){
+  const now=new Date();
+  // Ajustamos a Colombia UTC-5
+  const col=new Date(now.getTime()-5*3600000);
+  return col.toISOString().slice(0,10);
+}
 function toSnk(s){return s.replace(/([A-Z])/g,'_$1').toLowerCase();}
 function avg(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;}
 function pct(n,d){return d?Math.round(n/d*100):0;}
