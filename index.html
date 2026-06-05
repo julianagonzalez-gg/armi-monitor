@@ -731,37 +731,46 @@ function switchTab(name) {
 //  FETCH
 // ═══════════════════════════════
 async function fetchAll() {
-  const c=cfg(); let page=1, all=[], more=true;
-  while(more){
+  // Paginación inteligente por fecha:
+  // El API ordena de más reciente a más antigua.
+  // Seguimos pidiendo páginas mientras las órdenes sean de HOY.
+  // Al encontrar una orden de ayer, paramos — tenemos el día completo.
+  const c=cfg();
+  const today=new Date().toISOString().slice(0,10);
+  let page=1, all=[], more=true, maxPages=100;
+  const lupd=document.getElementById('lupd');
+ 
+  while(more && page<=maxPages){
+    if(lupd) lupd.textContent=`Cargando p.${page}...`;
+    const params=new URLSearchParams({page,pageSize:c.ps,country:c.cou,endpoint:c.ep,apikey:c.key});
     let r;
-    try {
-      r=await fetch(`${c.ep}?page=${page}&pageSize=${c.ps}`,{
-        method:'GET',
-        headers:{
-          'Content-Type':'application/json',
-          'COUNTRY':c.cou,
-          'armi-business-api-key':c.key
-        }
-      });
-    } catch(netErr) {
-      throw new Error('Error de red (posible bloqueo CORS). Verifica el endpoint o contacta al equipo técnico para habilitar CORS. Detalle: '+netErr.message);
-    }
-    if(r.status===401||r.status===403) throw new Error('API Key invalida o sin permisos (HTTP '+r.status+'). Verifica el key y el header COUNTRY.');
-    if(r.status===404) throw new Error('Endpoint no encontrado (HTTP 404). URL: '+c.ep);
-    if(!r.ok) throw new Error('Error del servidor: HTTP '+r.status);
+    try{ r=await fetch('/api/proxy?'+params); }
+    catch(e){ throw new Error('No se pudo conectar al proxy. '+e.message); }
+    if(r.status===401||r.status===403) throw new Error('API Key inválida (HTTP '+r.status+').');
+    if(r.status===404) throw new Error('Proxy no encontrado. Verifica api/proxy.js en el repo.');
+    if(!r.ok){let det='';try{const j=await r.json();det=j.detail||j.error||'';}catch(e){}throw new Error('Error HTTP '+r.status+'. '+det);}
     let d;
-    try { d=await r.json(); } catch(e){ throw new Error('La respuesta no es JSON valido. Verifica el endpoint.'); }
-    // Estructura real: { status, data: { orders: [], pagination: { totalPages } } }
-    const ords=Array.isArray(d)?d:
-      (d.data&&d.data.orders)?d.data.orders:
-      (d.orders||d.data||d.results||d.content||d.items||[]);
+    try{ d=await r.json(); }catch(e){ throw new Error('Respuesta no válida del proxy.'); }
+    if(d.error) throw new Error(d.error+(d.detail?' — '+d.detail:''));
+ 
+    // Estructura real: { data: { orders: [], pagination: { totalPages } } }
+    const ords=Array.isArray(d)?d:(d.data&&d.data.orders)?d.data.orders:(d.orders||d.data||d.results||[]);
     if(page===1&&ords.length===0) throw new Error('El API respondió sin órdenes. Verifica COUNTRY (COL) y API key.');
+ 
     all=all.concat(ords);
-    const pagination=d.data&&d.data.pagination?d.data.pagination:null;
-    const tp=pagination?pagination.totalPages:(d.totalPages||d.total_pages||null);
-    // Limitar a 10 páginas por llamada para no sobrecargar (300 órdenes con pageSize=30)
-    if(tp&&page<tp&&page<10&&ords.length===c.ps){page++;}
-    else{more=false;}
+ 
+    // Revisar si la última orden ya es de ayer → tenemos todo el día de hoy
+    const lastDate=(ords[ords.length-1]||{}).createDate||'';
+    const hitYesterday=lastDate&&!lastDate.startsWith(today);
+ 
+    const pagination=d.data&&d.data.pagination||null;
+    const totalPages=pagination?pagination.totalPages:(d.totalPages||null);
+ 
+    if(hitYesterday||ords.length<c.ps||(totalPages&&page>=totalPages)){
+      more=false;
+    } else {
+      page++;
+    }
   }
   return all;
 }
