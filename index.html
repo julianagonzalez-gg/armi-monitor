@@ -1236,12 +1236,12 @@ function renderAlertas2(){
     const tao=parseFloat(o.tao)||0;
     return{
       id:o.orderId||o.id||'—',
-      brand:(o.businessName||o.merchant||o.marca||'—').trim(),
-      city:(o.city||o.ciudad||'—').trim(),
-      store:(o.storeName||o.store||'—').trim(),
-      km:parseFloat(o.distance||o.km||0)||0,
-      mins,
-      st:(o.status||o.estado||'').trim()
+      brand:(o.businessName||'—').trim(),
+      city:cityName((o.cityId||o.city||'').trim()),
+      store:(o.branchOfficeName||o.storeName||'—').trim(),
+      km:parseFloat(o.distance||0)||0,
+      mins:tao,
+      st:(o.state||o.status||'').trim()
     };
   }).sort((a,b)=>b.mins-a.mins);
  
