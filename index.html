@@ -182,6 +182,21 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 .ticker{padding:5px 24px;background:var(--surface);border-top:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--text3);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .tdot{width:5px;height:5px;border-radius:50%;display:inline-block}
 .lbl-green{color:var(--green-t)} .lbl-yellow{color:var(--yellow-t)} .lbl-red{color:var(--red-t)} .lbl-armi{color:var(--armi-l)}
+ 
+/* ── Multi-select con búsqueda ── */
+.ms-wrap{position:relative;font-family:var(--mono);font-size:11px}
+.ms-box{min-height:32px;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:4px 8px;display:flex;flex-wrap:wrap;gap:4px;align-items:center;cursor:text}
+.ms-box:focus-within{border-color:var(--armi-l)}
+.ms-tag{background:var(--armi);color:#fff;border-radius:3px;padding:2px 6px;display:flex;align-items:center;gap:4px;font-size:10px;white-space:nowrap}
+.ms-tag button{background:none;border:none;color:#fff;cursor:pointer;padding:0;font-size:12px;line-height:1}
+.ms-input{border:none;background:transparent;color:var(--text1);font-family:var(--mono);font-size:11px;outline:none;min-width:120px;flex:1}
+.ms-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border2);border-radius:4px;max-height:200px;overflow-y:auto;z-index:999;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.ms-dropdown.open{display:block}
+.ms-opt{padding:6px 10px;cursor:pointer;font-size:11px;color:var(--text1)}
+.ms-opt:hover,.ms-opt.active{background:var(--armi);color:#fff}
+.ms-opt.selected{background:rgba(83,74,183,0.2);color:var(--armi-l)}
+.ms-opt.selected:hover{background:var(--armi);color:#fff}
+.ms-empty{padding:8px 10px;color:var(--text3);font-size:11px}
 </style>
 </head>
 <body>
@@ -357,9 +372,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
       <div class="panel">
         <div class="ph"><div class="pt">Encolamiento · Marca</div><div class="pc" id="cnt-mrc">—</div></div>
         <div style="padding:8px 16px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <select id="flt-mrc" multiple style="min-width:200px;max-width:100%;height:32px;font-family:var(--mono);font-size:11px;background:var(--surface2);color:var(--text1);border:1px solid var(--border2);border-radius:4px;padding:4px" onchange="renderGeneral()">
-          </select>
-          <button onclick="document.getElementById('flt-mrc').selectedIndex=-1;renderGeneral()" style="font-size:10px;padding:4px 8px;background:var(--surface2);color:var(--text3);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-family:var(--mono)">✕ limpiar</button>
+          <div id="ms-mrc" style="flex:1;min-width:200px"></div>
+          <button onclick="_msMarca&&_msMarca.clear()" style="font-size:10px;padding:4px 8px;background:var(--surface2);color:var(--text3);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-family:var(--mono)">✕ limpiar</button>
         </div>
         <div class="ts">
           <table class="tbl" id="tbl-mrc">
@@ -381,13 +395,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     <!-- ENCOLAMIENTO Tienda -->
     <div class="panel">
       <div class="ph"><div class="pt">Encolamiento · Tienda</div><div class="pc" id="cnt-tie">—</div></div>
-      <div style="padding:8px 16px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <select id="flt-tie-brand" multiple style="min-width:200px;max-width:45%;height:32px;font-family:var(--mono);font-size:11px;background:var(--surface2);color:var(--text1);border:1px solid var(--border2);border-radius:4px;padding:4px" onchange="renderGeneral()">
-        </select>
-        <select id="flt-tie-store" multiple style="min-width:200px;max-width:45%;height:32px;font-family:var(--mono);font-size:11px;background:var(--surface2);color:var(--text1);border:1px solid var(--border2);border-radius:4px;padding:4px" onchange="renderGeneral()">
-        </select>
-        <button onclick="document.getElementById('flt-tie-brand').selectedIndex=-1;document.getElementById('flt-tie-store').selectedIndex=-1;renderGeneral()" style="font-size:10px;padding:4px 8px;background:var(--surface2);color:var(--text3);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-family:var(--mono)">✕ limpiar</button>
-        <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">Ctrl+clic para seleccionar múltiples</span>
+      <div style="padding:8px 16px 0;display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap">
+        <div style="flex:1;min-width:180px">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:4px">FILTRAR POR MARCA</div>
+          <div id="ms-tie-brand"></div>
+        </div>
+        <div style="flex:1;min-width:180px">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:4px">FILTRAR POR TIENDA</div>
+          <div id="ms-tie-store"></div>
+        </div>
+        <div style="display:flex;align-items:flex-end;padding-bottom:2px">
+          <button onclick="_msTiendaBrand&&_msTiendaBrand.clear();_msTiendaStore&&_msTiendaStore.clear()" style="font-size:10px;padding:4px 8px;background:var(--surface2);color:var(--text3);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-family:var(--mono)">✕ limpiar todo</button>
+        </div>
       </div>
       <div class="ts">
         <table class="tbl" id="tbl-tie">
@@ -1125,14 +1144,15 @@ function render(){
   // Encolamiento marca
   const mrcs=encol(S.active,'businessName');
   set('cnt-mrc',`${mrcs.length} marcas`);
-  populateFilter('flt-mrc', mrcs.map(r=>r.key));
+  initFilters();
+  populateFilter(_msMarca, mrcs.map(r=>r.key));
   renderMarca(mrcs);
  
   // Encolamiento tienda
   const ties=encolTienda();
   set('cnt-tie',`${ties.length} tiendas`);
-  populateFilter('flt-tie-brand', [...new Set(ties.map(r=>r.brand))].sort());
-  populateFilter('flt-tie-store', ties.map(r=>r.store));
+  populateFilter(_msTiendaBrand, [...new Set(ties.map(r=>r.brand))].sort());
+  populateFilter(_msTiendaStore, ties.map(r=>r.store));
   renderTienda(ties);
  
   // Deep ciudad
@@ -1163,24 +1183,25 @@ function sortEncol(tbl, col){
   });
   const arrow=document.getElementById(`sort-${tbl}-${col}`);
   if(arrow) arrow.textContent=_sort[tbl].asc?'↑':'↓';
-  renderGeneral();
+  render();
 }
  
-function getSelectedValues(id){
-  const sel=document.getElementById(id);
-  if(!sel) return [];
-  return Array.from(sel.selectedOptions).map(o=>o.value);
-}
- 
-function populateFilter(id, values){
-  const sel=document.getElementById(id);
-  if(!sel) return;
-  const current=getSelectedValues(id);
+function populateFilter(msInst, values){
+  if(!msInst) return;
   const unique=[...new Set(values)].sort();
-  // Only repopulate if options changed
-  const existing=Array.from(sel.options).map(o=>o.value);
-  if(JSON.stringify(unique)===JSON.stringify(existing)) return;
-  sel.innerHTML=unique.map(v=>`<option value="${v}"${current.includes(v)?' selected':''}>${v}</option>`).join('');
+  msInst.setOptions(unique);
+}
+ 
+function initFilters(){
+  if(!_msMarca){
+    _msMarca=new MultiSelect('ms-mrc',()=>render());
+  }
+  if(!_msTiendaBrand){
+    _msTiendaBrand=new MultiSelect('ms-tie-brand',()=>render());
+  }
+  if(!_msTiendaStore){
+    _msTiendaStore=new MultiSelect('ms-tie-store',()=>render());
+  }
 }
  
 function sortRows(rows, col, asc){
@@ -1192,7 +1213,7 @@ function sortRows(rows, col, asc){
 }
  
 function renderMarca(mrcs){
-  const selected=getSelectedValues('flt-mrc');
+  const selected=_msMarca?_msMarca.getSelected():[];
   let rows=selected.length?mrcs.filter(r=>selected.includes(r.key)):mrcs;
   rows=sortRows(rows,_sort.mrc.col,_sort.mrc.asc);
   const tb=document.getElementById('tb-mrc');
@@ -1209,8 +1230,8 @@ function renderMarca(mrcs){
 }
  
 function renderTienda(ties){
-  const selBrand=getSelectedValues('flt-tie-brand');
-  const selStore=getSelectedValues('flt-tie-store');
+  const selBrand=_msTiendaBrand?_msTiendaBrand.getSelected():[];
+  const selStore=_msTiendaStore?_msTiendaStore.getSelected():[];
   let rows=ties;
   if(selBrand.length) rows=rows.filter(r=>selBrand.includes(r.brand));
   if(selStore.length) rows=rows.filter(r=>selStore.includes(r.store));
@@ -1597,6 +1618,80 @@ function toggleTheme(){
   }
 })();
  
+ 
+// ══════════════════════════════════════════════════════
+//  MultiSelect — búsqueda + tags + multi-selección
+// ══════════════════════════════════════════════════════
+class MultiSelect {
+  constructor(containerId, onChangeFn){
+    this.el=document.getElementById(containerId);
+    this.onChange=onChangeFn;
+    this.selected=new Set();
+    this.options=[];
+    this._build();
+  }
+  _build(){
+    this.el.innerHTML=`
+      <div class="ms-wrap">
+        <div class="ms-box" id="${this.el.id}-box">
+          <input class="ms-input" id="${this.el.id}-input" placeholder="Buscar…" autocomplete="off"/>
+        </div>
+        <div class="ms-dropdown" id="${this.el.id}-dd"></div>
+      </div>`;
+    this.box=document.getElementById(this.el.id+'-box');
+    this.input=document.getElementById(this.el.id+'-input');
+    this.dd=document.getElementById(this.el.id+'-dd');
+    this.input.addEventListener('input',()=>this._filter());
+    this.input.addEventListener('focus',()=>{this.dd.classList.add('open');this._filter();});
+    document.addEventListener('click',e=>{if(!this.el.contains(e.target)){this.dd.classList.remove('open');}});
+  }
+  setOptions(opts){
+    const prev=[...this.selected];
+    this.options=opts;
+    this.selected=new Set(prev.filter(p=>opts.includes(p)));
+    this._renderTags();
+    this._filter();
+  }
+  _filter(){
+    const q=this.input.value.toLowerCase();
+    const filtered=this.options.filter(o=>o.toLowerCase().includes(q));
+    if(!filtered.length){this.dd.innerHTML='<div class="ms-empty">Sin resultados</div>';return;}
+    this.dd.innerHTML=filtered.map(o=>`
+      <div class="ms-opt${this.selected.has(o)?' selected':''}" data-val="${o.replace(/"/g,'&quot;')}">${o}</div>
+    `).join('');
+    this.dd.querySelectorAll('.ms-opt').forEach(el=>{
+      el.addEventListener('mousedown',e=>{
+        e.preventDefault();
+        const v=el.dataset.val;
+        if(this.selected.has(v)){this.selected.delete(v);el.classList.remove('selected');}
+        else{this.selected.add(v);el.classList.add('selected');}
+        this._renderTags();
+        this.onChange();
+      });
+    });
+  }
+  _renderTags(){
+    // Remove existing tags
+    this.box.querySelectorAll('.ms-tag').forEach(t=>t.remove());
+    [...this.selected].forEach(v=>{
+      const tag=document.createElement('span');
+      tag.className='ms-tag';
+      tag.innerHTML=`${v}<button type="button">&times;</button>`;
+      tag.querySelector('button').addEventListener('click',()=>{
+        this.selected.delete(v);
+        this._renderTags();
+        this._filter();
+        this.onChange();
+      });
+      this.box.insertBefore(tag,this.input);
+    });
+  }
+  getSelected(){ return [...this.selected]; }
+  clear(){ this.selected.clear(); this._renderTags(); this._filter(); this.onChange(); }
+}
+ 
+// Instancias globales de los filtros
+let _msMarca, _msTiendaBrand, _msTiendaStore;
 // INIT
 fetchNow();
 startTimer();
