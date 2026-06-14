@@ -199,13 +199,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     <div class="sdot" id="sdot"></div>
     <div class="lupd" id="lupd">Sin datos aún</div>
     <select class="isel" id="isel">
-      <option value="300000">↻ 5 min</option>
       <option value="600000">↻ 10 min</option>
       <option value="1800000">↻ 30 min</option>
       <option value="3600000">↻ 1 hora</option>
       <option value="28800000">↻ 8 horas</option>
+      <option value="60000">↻ 1 min</option>
     </select>
     <button class="btn pri" onclick="fetchNow()">↻ Actualizar</button>
+    <button class="btn sec" id="btnPause" onclick="togglePause()" title="Pausar/reanudar actualización automática">⏸ Pausar</button>
     <div class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
       <span class="toggle-icon" id="themeIcon">🌙</span>
       <div class="toggle-track">
@@ -348,17 +349,30 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         <div class="ph"><div class="pt">Encolamiento · Ciudad</div><div class="pc" id="cnt-ciu">—</div></div>
         <div class="ts">
           <table class="tbl">
-            <thead><tr><th>Ciudad</th><th>% Encol.</th><th>Enviadas</th><th>Asig.</th><th>Total</th><th>TAO prom.</th><th>&gt;30 min</th></tr></thead>
+            <thead><tr><th>Ciudad</th><th>% Encol.</th><th>Enviadas</th><th>Asig.</th><th>Picking</th><th>En camino</th><th>Total</th><th>TAO prom.</th><th>&gt;30 min</th></tr></thead>
             <tbody id="tb-ciu"><tr><td colspan="5" style="padding:24px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Cargando…</td></tr></tbody>
           </table>
         </div>
       </div>
       <div class="panel">
         <div class="ph"><div class="pt">Encolamiento · Marca</div><div class="pc" id="cnt-mrc">—</div></div>
+        <div style="padding:8px 16px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select id="flt-mrc" multiple style="min-width:200px;max-width:100%;height:32px;font-family:var(--mono);font-size:11px;background:var(--surface2);color:var(--text1);border:1px solid var(--border2);border-radius:4px;padding:4px" onchange="renderGeneral()">
+          </select>
+          <button onclick="document.getElementById('flt-mrc').selectedIndex=-1;renderGeneral()" style="font-size:10px;padding:4px 8px;background:var(--surface2);color:var(--text3);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-family:var(--mono)">✕ limpiar</button>
+        </div>
         <div class="ts">
-          <table class="tbl">
-            <thead><tr><th>Marca</th><th>% Encol.</th><th>Enviadas</th><th>Asig.</th><th>Total</th></tr></thead>
-            <tbody id="tb-mrc"><tr><td colspan="5" style="padding:24px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Cargando…</td></tr></tbody>
+          <table class="tbl" id="tbl-mrc">
+            <thead><tr>
+              <th onclick="sortEncol('mrc','key')" style="cursor:pointer">Marca <span id="sort-mrc-key">↕</span></th>
+              <th onclick="sortEncol('mrc','pct')" style="cursor:pointer">% Encol. <span id="sort-mrc-pct">↕</span></th>
+              <th onclick="sortEncol('mrc','env')" style="cursor:pointer">Enviadas <span id="sort-mrc-env">↕</span></th>
+              <th onclick="sortEncol('mrc','asig')" style="cursor:pointer">Asig. <span id="sort-mrc-asig">↕</span></th>
+              <th onclick="sortEncol('mrc','pick')" style="cursor:pointer">Picking <span id="sort-mrc-pick">↕</span></th>
+              <th onclick="sortEncol('mrc','cam')" style="cursor:pointer">En camino <span id="sort-mrc-cam">↕</span></th>
+              <th onclick="sortEncol('mrc','tot')" style="cursor:pointer">Total <span id="sort-mrc-tot">↕</span></th>
+            </tr></thead>
+            <tbody id="tb-mrc"><tr><td colspan="7" style="padding:24px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Cargando…</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -367,10 +381,27 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     <!-- ENCOLAMIENTO Tienda -->
     <div class="panel">
       <div class="ph"><div class="pt">Encolamiento · Tienda</div><div class="pc" id="cnt-tie">—</div></div>
+      <div style="padding:8px 16px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <select id="flt-tie-brand" multiple style="min-width:200px;max-width:45%;height:32px;font-family:var(--mono);font-size:11px;background:var(--surface2);color:var(--text1);border:1px solid var(--border2);border-radius:4px;padding:4px" onchange="renderGeneral()">
+        </select>
+        <select id="flt-tie-store" multiple style="min-width:200px;max-width:45%;height:32px;font-family:var(--mono);font-size:11px;background:var(--surface2);color:var(--text1);border:1px solid var(--border2);border-radius:4px;padding:4px" onchange="renderGeneral()">
+        </select>
+        <button onclick="document.getElementById('flt-tie-brand').selectedIndex=-1;document.getElementById('flt-tie-store').selectedIndex=-1;renderGeneral()" style="font-size:10px;padding:4px 8px;background:var(--surface2);color:var(--text3);border:1px solid var(--border2);border-radius:4px;cursor:pointer;font-family:var(--mono)">✕ limpiar</button>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">Ctrl+clic para seleccionar múltiples</span>
+      </div>
       <div class="ts">
-        <table class="tbl">
-          <thead><tr><th>Tienda</th><th>Marca</th><th>Ciudad</th><th>% Encol.</th><th>Enviadas</th><th>Asig.</th><th>Total</th></tr></thead>
-          <tbody id="tb-tie"><tr><td colspan="7" style="padding:24px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Cargando…</td></tr></tbody>
+        <table class="tbl" id="tbl-tie">
+          <thead><tr>
+            <th onclick="sortEncol('tie','store')" style="cursor:pointer">Tienda <span id="sort-tie-store">↕</span></th>
+            <th>Marca</th><th>Ciudad</th>
+            <th onclick="sortEncol('tie','pct')" style="cursor:pointer">% Encol. <span id="sort-tie-pct">↕</span></th>
+            <th onclick="sortEncol('tie','env')" style="cursor:pointer">Enviadas <span id="sort-tie-env">↕</span></th>
+            <th onclick="sortEncol('tie','asig')" style="cursor:pointer">Asig. <span id="sort-tie-asig">↕</span></th>
+            <th onclick="sortEncol('tie','pick')" style="cursor:pointer">Picking <span id="sort-tie-pick">↕</span></th>
+            <th onclick="sortEncol('tie','cam')" style="cursor:pointer">En camino <span id="sort-tie-cam">↕</span></th>
+            <th onclick="sortEncol('tie','tot')" style="cursor:pointer">Total <span id="sort-tie-tot">↕</span></th>
+          </tr></thead>
+          <tbody id="tb-tie"><tr><td colspan="9" style="padding:24px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Cargando…</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -815,7 +846,7 @@ const CITY_NAMES={
   'MON':'Montería','VAL':'Valledupar','RIO':'Riohacha','TUN':'Tunja',
   'POP':'Popayán','FLO':'Florencia','LET':'Leticia','MIT':'Mitú',
   'ARA':'Arauca','YOP':'Yopal','INI':'Inírida','PRS':'Puerto Carreño',
-  'MOC':'Mocoa','QUI':'Quibdó','SJG':'San José del Guaviare',
+  'MOC':'Mocoa','QUI':'Quibdó','SJG':'San José del Guaviare','CHI':'Chía','SOA':'Sopó','ZIP':'Zipaquirá','FAC':'Facatativá','AMU':'Armero','RIO':'Rionegro',
 };
 function cityName(id){ return CITY_NAMES[id]||id||'Desconocida'; }
  
@@ -952,10 +983,12 @@ function encolCiudad() {
   S.active.forEach(o=>{
     const cityId=(o.cityId||o.city||'').trim();
     const k=cityName(cityId);
-    if(!map[k]) map[k]={env:0,asig:0,ot:0,taos:[],gt30:0};
+    if(!map[k]) map[k]={env:0,asig:0,pick:0,cam:0,ot:0,taos:[],gt30:0};
     const state=o.state||o.status||o.estado||'';
     if(isEnv(state)) map[k].env++;
     else if(isAsig(state)) map[k].asig++;
+    else if(isPicking(state)) map[k].pick++;
+    else if(isEnCamino(state)) map[k].cam++;
     else map[k].ot++;
     // tao ya viene calculado en minutos desde el API
     const tao=parseFloat(o.tao)||0;
@@ -965,14 +998,16 @@ function encolCiudad() {
   const cities=Object.entries(map).map(([k,d])=>{
     const tot=d.env+d.asig+d.ot;
     const tao=d.taos.length?d.taos.reduce((a,b)=>a+b,0)/d.taos.length:0;
-    return{key:k,env:d.env,asig:d.asig,tot,gt30:d.gt30,tao,pct:tot?Math.round(d.env/tot*100):0};
+    return{key:k,env:d.env,asig:d.asig,pick:d.pick||0,cam:d.cam||0,tot,gt30:d.gt30,tao,pct:tot?Math.round(d.env/tot*100):0};
   }).sort((a,b)=>b.pct-a.pct||b.tot-a.tot);
   // Totales
-  let tEnv=0,tAsig=0,tOt=0,tGt30=0,allTaos=[];
+  let tEnv=0,tAsig=0,tPick=0,tCam=0,tOt=0,tGt30=0,allTaos=[];
   S.active.forEach(o=>{
     const state=o.state||o.status||o.estado||'';
     if(isEnv(state)) tEnv++;
     else if(isAsig(state)) tAsig++;
+    else if(isPicking(state)) tPick++;
+    else if(isEnCamino(state)) tCam++;
     else tOt++;
     const tao=parseFloat(o.tao)||0;
     allTaos.push(tao);
@@ -980,26 +1015,30 @@ function encolCiudad() {
   });
   const tot=tEnv+tAsig+tOt;
   const tao=allTaos.length?allTaos.reduce((a,b)=>a+b,0)/allTaos.length:0;
-  return{cities,total:{env:tEnv,asig:tAsig,tot,gt30:tGt30,tao,pct:tot?Math.round(tEnv/tot*100):0}};
+  return{cities,total:{env:tEnv,asig:tAsig,pick:tPick,cam:tCam,tot,gt30:tGt30,tao,pct:tot?Math.round(tEnv/tot*100):0}};
 }
+ 
+function isPicking(st){ const s=(st||'').toUpperCase().trim(); return s==='PICKING'||s==='PICKING TERMINADO'; }
+function isEnCamino(st){ const s=(st||'').toUpperCase().trim(); return s==='EN CAMINO'||s==='EN PUNTO DE ENTREGA'; }
  
 function encol(group, keyField) {
   const map={};
   S.active.forEach(o=>{
-    // Mapeo real de campos Armi
     let k;
     if(keyField==='businessName') k=(o.businessName||'?').trim();
     else if(keyField==='cityId') k=cityName((o.cityId||o.city||'').trim());
     else k=(o[keyField]||'?').trim();
-    if(!map[k]) map[k]={env:0,asig:0,ot:0};
+    if(!map[k]) map[k]={env:0,asig:0,pick:0,cam:0,ot:0};
     const state=o.state||o.status||o.estado||'';
     if(isEnv(state)) map[k].env++;
     else if(isAsig(state)) map[k].asig++;
+    else if(isPicking(state)) map[k].pick++;
+    else if(isEnCamino(state)) map[k].cam++;
     else map[k].ot++;
   });
   return Object.entries(map).map(([k,d])=>{
-    const tot=d.env+d.asig+d.ot;
-    return{key:k,env:d.env,asig:d.asig,tot,pct:tot?Math.round(d.env/tot*100):0};
+    const tot=d.env+d.asig+d.pick+d.cam+d.ot;
+    return{key:k,env:d.env,asig:d.asig,pick:d.pick,cam:d.cam,tot,pct:tot?Math.round(d.env/tot*100):0};
   }).sort((a,b)=>b.pct-a.pct||b.tot-a.tot);
 }
  
@@ -1009,15 +1048,17 @@ function encolTienda() {
     const k=(o.branchOfficeName||o.storeName||o.store||'?').trim();
     const brand=(o.businessName||'—').trim();
     const city=cityName((o.cityId||o.city||'').trim());
-    if(!map[k]) map[k]={brand,city,env:0,asig:0,ot:0};
+    if(!map[k]) map[k]={brand,city,env:0,asig:0,pick:0,cam:0,ot:0};
     const state=o.state||o.status||o.estado||'';
     if(isEnv(state)) map[k].env++;
     else if(isAsig(state)) map[k].asig++;
+    else if(isPicking(state)) map[k].pick++;
+    else if(isEnCamino(state)) map[k].cam++;
     else map[k].ot++;
   });
   return Object.entries(map).map(([k,d])=>{
-    const tot=d.env+d.asig+d.ot;
-    return{store:k,brand:d.brand,city:d.city,env:d.env,asig:d.asig,tot,pct:tot?Math.round(d.env/tot*100):0};
+    const tot=d.env+d.asig+d.pick+d.cam+d.ot;
+    return{store:k,brand:d.brand,city:d.city,env:d.env,asig:d.asig,pick:d.pick,cam:d.cam,tot,pct:tot?Math.round(d.env/tot*100):0};
   }).sort((a,b)=>b.pct-a.pct||b.tot-a.tot);
 }
  
@@ -1064,6 +1105,8 @@ function render(){
     <td>${bar(cius.total.pct)}</td>
     <td style="font-weight:700">${cius.total.env}</td>
     <td style="font-weight:700">${cius.total.asig}</td>
+    <td style="font-weight:700">${cius.total.pick||0}</td>
+    <td style="font-weight:700">${cius.total.cam||0}</td>
     <td style="font-weight:700">${cius.total.tot}</td>
     <td style="font-weight:700;color:${cius.total.tao>20?'var(--red-t)':cius.total.tao>12?'var(--yellow-t)':'var(--green-t)'}">${cius.total.tao>0?cius.total.tao.toFixed(1)+' min':'—'}</td>
     <td style="font-weight:700;color:${cius.total.gt30>0?'var(--red-t)':'var(--text3)'}">${cius.total.gt30}</td>
@@ -1071,22 +1114,26 @@ function render(){
   const cityRows=cius.cities.length
     ?cius.cities.map(r=>`<tr>
       <td>${r.key}</td><td>${bar(r.pct)}</td><td>${r.env}</td><td>${r.asig}</td>
+      <td>${r.pick||0}</td><td>${r.cam||0}</td>
       <td><strong>${r.tot}</strong></td>
       <td style="color:${r.tao>20?'var(--red-t)':r.tao>12?'var(--yellow-t)':'var(--green-t)'}">${r.tao>0?r.tao.toFixed(1)+' min':'—'}</td>
       <td style="color:${r.gt30>0?'var(--red-t)':'var(--text3)'}">${r.gt30}</td>
     </tr>`).join('')
-    :'<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin órdenes activas</td></tr>';
+    :'<tr><td colspan="9" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin órdenes activas</td></tr>';
   document.getElementById('tb-ciu').innerHTML=totalRow+cityRows;
  
   // Encolamiento marca
   const mrcs=encol(S.active,'businessName');
   set('cnt-mrc',`${mrcs.length} marcas`);
-  renderEncol('tb-mrc', mrcs, r=>`<tr><td>${r.key}</td><td>${bar(r.pct)}</td><td>${r.env}</td><td>${r.asig}</td><td><strong>${r.tot}</strong></td></tr>`, 5);
+  populateFilter('flt-mrc', mrcs.map(r=>r.key));
+  renderMarca(mrcs);
  
   // Encolamiento tienda
   const ties=encolTienda();
   set('cnt-tie',`${ties.length} tiendas`);
-  renderEncol('tb-tie', ties, r=>`<tr><td>${r.store}</td><td><span style="color:var(--text3);font-size:11px">${r.brand}</span></td><td><span style="color:var(--text3);font-size:11px">${r.city}</span></td><td>${bar(r.pct)}</td><td>${r.env}</td><td>${r.asig}</td><td><strong>${r.tot}</strong></td></tr>`, 7);
+  populateFilter('flt-tie-brand', [...new Set(ties.map(r=>r.brand))].sort());
+  populateFilter('flt-tie-store', ties.map(r=>r.store));
+  renderTienda(ties);
  
   // Deep ciudad
   renderDeepCiudad();
@@ -1101,6 +1148,86 @@ function renderEncol(tbId, rows, rowFn, cols) {
   const el=document.getElementById(tbId);
   if(!rows.length){el.innerHTML=`<tr><td colspan="${cols}" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin órdenes activas</td></tr>`;return;}
   el.innerHTML=rows.map(rowFn).join('');
+}
+ 
+// ── Sort state ──
+const _sort={mrc:{col:'pct',asc:false}, tie:{col:'pct',asc:false}};
+ 
+function sortEncol(tbl, col){
+  if(_sort[tbl].col===col) _sort[tbl].asc=!_sort[tbl].asc;
+  else { _sort[tbl].col=col; _sort[tbl].asc=false; }
+  // Update arrow indicators
+  ['key','pct','env','asig','pick','cam','tot','store'].forEach(c=>{
+    const el=document.getElementById(`sort-${tbl}-${c}`);
+    if(el) el.textContent='↕';
+  });
+  const arrow=document.getElementById(`sort-${tbl}-${col}`);
+  if(arrow) arrow.textContent=_sort[tbl].asc?'↑':'↓';
+  renderGeneral();
+}
+ 
+function getSelectedValues(id){
+  const sel=document.getElementById(id);
+  if(!sel) return [];
+  return Array.from(sel.selectedOptions).map(o=>o.value);
+}
+ 
+function populateFilter(id, values){
+  const sel=document.getElementById(id);
+  if(!sel) return;
+  const current=getSelectedValues(id);
+  const unique=[...new Set(values)].sort();
+  // Only repopulate if options changed
+  const existing=Array.from(sel.options).map(o=>o.value);
+  if(JSON.stringify(unique)===JSON.stringify(existing)) return;
+  sel.innerHTML=unique.map(v=>`<option value="${v}"${current.includes(v)?' selected':''}>${v}</option>`).join('');
+}
+ 
+function sortRows(rows, col, asc){
+  return [...rows].sort((a,b)=>{
+    const va=a[col]??''; const vb=b[col]??'';
+    if(typeof va==='number') return asc?va-vb:vb-va;
+    return asc?va.localeCompare(vb):vb.localeCompare(va);
+  });
+}
+ 
+function renderMarca(mrcs){
+  const selected=getSelectedValues('flt-mrc');
+  let rows=selected.length?mrcs.filter(r=>selected.includes(r.key)):mrcs;
+  rows=sortRows(rows,_sort.mrc.col,_sort.mrc.asc);
+  const tb=document.getElementById('tb-mrc');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="7" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin resultados</td></tr>';return;}
+  tb.innerHTML=rows.map(r=>`<tr>
+    <td>${r.key}</td>
+    <td>${bar(r.pct)}</td>
+    <td>${r.env}</td>
+    <td>${r.asig}</td>
+    <td>${r.pick||0}</td>
+    <td>${r.cam||0}</td>
+    <td><strong>${r.tot}</strong></td>
+  </tr>`).join('');
+}
+ 
+function renderTienda(ties){
+  const selBrand=getSelectedValues('flt-tie-brand');
+  const selStore=getSelectedValues('flt-tie-store');
+  let rows=ties;
+  if(selBrand.length) rows=rows.filter(r=>selBrand.includes(r.brand));
+  if(selStore.length) rows=rows.filter(r=>selStore.includes(r.store));
+  rows=sortRows(rows,_sort.tie.col,_sort.tie.asc);
+  const tb=document.getElementById('tb-tie');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="9" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin resultados</td></tr>';return;}
+  tb.innerHTML=rows.map(r=>`<tr>
+    <td style="font-size:12px">${r.store}</td>
+    <td style="color:var(--text3);font-size:11px">${r.brand}</td>
+    <td style="color:var(--text3);font-size:11px">${r.city}</td>
+    <td>${bar(r.pct)}</td>
+    <td>${r.env}</td>
+    <td>${r.asig}</td>
+    <td>${r.pick||0}</td>
+    <td>${r.cam||0}</td>
+    <td><strong>${r.tot}</strong></td>
+  </tr>`).join('');
 }
  
 function renderDeepCiudad() {
@@ -1422,11 +1549,35 @@ function hideErr(){document.getElementById('errBox').style.display='none';}
 // ═══════════════════════════════
 //  TIMER
 // ═══════════════════════════════
+let _paused=false;
+ 
+function togglePause(){
+  _paused=!_paused;
+  const btn=document.getElementById('btnPause');
+  const dot=document.getElementById('sdot');
+  if(_paused){
+    clearInterval(S.timer);
+    S.timer=null;
+    btn.textContent='▶ Reanudar';
+    btn.style.background='var(--red-t)';
+    btn.style.color='#fff';
+    dot.style.background='var(--yellow-t)';
+  } else {
+    btn.textContent='⏸ Pausar';
+    btn.style.background='';
+    btn.style.color='';
+    startTimer();
+  }
+}
+ 
 function startTimer(){
+  if(_paused) return; // No iniciar si está pausado
   if(S.timer) clearInterval(S.timer);
   S.timer=setInterval(fetchNow,parseInt(document.getElementById('isel').value));
 }
-document.getElementById('isel').addEventListener('change',startTimer);
+document.getElementById('isel').addEventListener('change',()=>{
+  if(!_paused) startTimer();
+});
  
 // ── TEMA ──────────────────────────────────
 function toggleTheme(){
