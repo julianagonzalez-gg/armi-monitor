@@ -1789,11 +1789,10 @@ async function fetchTimings(finOrders) {
 
       try {
         const params = new URLSearchParams({
-          mode: 'order',
           orderId: numId,
           country: c.cou
         });
-        const r = await fetch('/api/proxy?' + params);
+        const r = await fetch('/api/order-history?' + params);
         if (!r.ok) return;
         const d = await r.json();
 
