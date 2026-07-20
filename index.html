@@ -841,6 +841,8 @@ async function fetchNow() {
   S.seen=new Set();
   S.active=[];
   window._armiTodayDate=null;
+  // Reset tiempos para recalcular en cada actualización
+  S.tiempos={loading:false,done:false,envAsig:[],asigPick:[],pickTerm:[],termFin:[],total:[],gt60:[]};
   try{
     const ords=await fetchAll();
     process(ords);
@@ -1797,7 +1799,7 @@ async function fetchTimings(finOrders) {
         const d = await r.json();
 
         // El endpoint devuelve el order con orderStatus array
-        const orderStatus = d?.orderStatus || d?.data?.getArmiOrder?.order?.orderStatus || [];
+        const orderStatus = d?.data?.orderStatus || d?.orderStatus || d?.data?.getArmiOrder?.order?.orderStatus || [];
         const times = calcTimesFromStatus(orderStatus);
         if (!times) return; // excluir si alguna etapa es 0
 
@@ -1822,11 +1824,6 @@ async function fetchTimings(finOrders) {
   S.tiempos.done = true;
   if (lupd) lupd.textContent = `Actualizado ${new Date().toLocaleTimeString('es-CO')}`;
   renderTimings();
-}
-
-function avg(arr) {
-  if (!arr || !arr.length) return null;
-  return arr.reduce((a, b) => a + b, 0) / arr.length;
 }
 
 function renderTimings() {
