@@ -17,7 +17,7 @@
   --blue:#1a6bb3; --blue-bg:rgba(26,107,179,0.14); --blue-t:#4da6e8;
   --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif;
 }
- 
+
 /* ── MODO CLARO ── */
 body.light {
   --bg:#f0f2f5; --surface:#ffffff; --surface2:#f5f6f8; --surface3:#eaecf0;
@@ -39,7 +39,7 @@ body.light .oid-row.g { background:rgba(30,122,62,0.05); }
 body.light .oid-row.y { background:rgba(160,112,16,0.05); }
 body.light .oid-row.r { background:rgba(143,32,32,0.06); }
 body.light .times-grid .tc:last-child { background:rgba(83,74,183,0.05); }
- 
+
 /* ── TOGGLE SWITCH ── */
 .theme-toggle {
   display:flex; align-items:center; gap:8px;
@@ -182,7 +182,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 .ticker{padding:5px 24px;background:var(--surface);border-top:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--text3);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .tdot{width:5px;height:5px;border-radius:50%;display:inline-block}
 .lbl-green{color:var(--green-t)} .lbl-yellow{color:var(--yellow-t)} .lbl-red{color:var(--red-t)} .lbl-armi{color:var(--armi-l)}
- 
+
 /* ── Multi-select con búsqueda ── */
 .ms-wrap{position:relative;font-family:var(--mono);font-size:11px}
 .ms-box{min-height:32px;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:4px 8px;display:flex;flex-wrap:wrap;gap:4px;align-items:center;cursor:text}
@@ -200,7 +200,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 </style>
 </head>
 <body>
- 
+
 <!-- HEADER -->
 <div class="hdr">
   <div class="logo">
@@ -231,7 +231,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     </div>
   </div>
 </div>
- 
+
 <!-- CONFIG -->
 <div class="cfg">
   <!-- Endpoint y API Key fijos — ocultos para usuarios finales -->
@@ -249,7 +249,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     <button class="btn" onclick="saveConfig()">Guardar</button>
   </div>
 </div>
- 
+
 <!-- TABS -->
 <div class="tabs">
   <div class="tab active" onclick="switchTab('general')">General</div>
@@ -257,13 +257,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
   <div class="tab" onclick="switchTab('alertas')">Deep ordenes · KM &amp; TP</div>
   <div class="tab" onclick="switchTab('alertas2')">Sin movimiento &amp; Canceladas</div>
 </div>
- 
+
 <div class="main">
   <div id="errBox" style="display:none" class="err"></div>
- 
+
   <!-- ═══════════════════════════════ TAB 1: GENERAL ═══════════════════════════════ -->
   <div id="tab-general" class="tab-content active">
- 
+
     <!-- BLOQUE ÓRDENES: panel con título -->
     <div class="panel" style="overflow:visible;border-color:rgba(77,166,232,0.2)">
       <div class="ph" style="background:rgba(26,107,179,0.08);border-bottom:1px solid rgba(26,107,179,0.15)">
@@ -308,7 +308,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
- 
+
     <!-- BLOQUE TIEMPOS: panel separado con título -->
     <div class="panel" style="overflow:visible;border-color:rgba(83,74,183,0.25)">
       <div class="ph" style="background:rgba(83,74,183,0.1);border-bottom:1px solid rgba(83,74,183,0.2)">
@@ -357,7 +357,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
- 
+
     <!-- ENCOLAMIENTO Ciudad + Marca -->
     <div class="g2">
       <div class="panel">
@@ -391,7 +391,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
- 
+
     <!-- ENCOLAMIENTO Tienda -->
     <div class="panel">
       <div class="ph"><div class="pt">Encolamiento · Tienda</div><div class="pc" id="cnt-tie">—</div></div>
@@ -424,12 +424,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
- 
+
   </div><!-- /tab-general -->
- 
+
   <!-- ═══════════════════════════════ TAB 2: DEEP POR CIUDAD ═══════════════════════════════ -->
   <div id="tab-ciudades" class="tab-content">
- 
+
     <div class="panel">
       <div class="ph">
         <div class="pt">7 indicadores por ciudad</div>
@@ -457,7 +457,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
- 
+
     <div class="panel">
       <div class="ph">
         <div class="pt">Tiempos promedio por etapa · Ciudad</div>
@@ -482,12 +482,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
- 
+
   </div><!-- /tab-ciudades -->
- 
+
   <!-- ═══════════════════════════════ TAB 3: DEEP ÓRDENES ═══════════════════════════════ -->
   <div id="tab-alertas" class="tab-content">
- 
+
     <!-- SECCIÓN KM -->
     <div class="panel">
       <div class="ph">
@@ -515,7 +515,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
- 
+
     <!-- SECCIÓN TP -->
     <div class="panel">
       <div class="ph">
@@ -539,13 +539,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
- 
+
   </div><!-- /tab-alertas -->
- 
- 
+
+
   <!-- ═══════════════════════ TAB 4: SIN MOVIMIENTO + CANCELADAS ═══════════════════════ -->
   <div id="tab-alertas2" class="tab-content">
- 
+
     <!-- CONFIGURACIÓN X minutos -->
     <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px 20px">
       <div style="font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3)">Umbral sin movimiento</div>
@@ -558,7 +558,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
       <div style="font-size:11px;color:var(--text3)">Órdenes en estado <em>enviada</em> sin pasar a asignada por más de X min</div>
       <div id="cnt-sinmov" style="margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--red-t)">—</div>
     </div>
- 
+
     <!-- ÓRDENES SIN MOVIMIENTO -->
     <div class="panel">
       <div class="ph" style="background:rgba(179,58,58,0.08);border-bottom:1px solid rgba(179,58,58,0.2)">
@@ -577,7 +577,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
- 
+
     <!-- ─── CANCELADAS DEL DÍA ─── -->
     <!-- KPIs canceladas -->
     <div class="panel" style="border-color:rgba(179,58,58,0.25)">
@@ -620,7 +620,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
- 
+
     <!-- TABLA canceladas por ciudad -->
     <div class="g2">
       <div class="panel">
@@ -644,7 +644,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
           </table>
         </div>
       </div>
- 
+
       <div class="panel">
         <div class="ph">
           <div class="pt">Canceladas por comercio / marca</div>
@@ -667,7 +667,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
- 
+
     <!-- HEATMAP HORARIO DE CANCELACIONES -->
     <div class="panel">
       <div class="ph">
@@ -685,7 +685,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </div>
       </div>
     </div>
- 
+
     <!-- DETALLE IDs canceladas recientes -->
     <div class="panel">
       <div class="ph">
@@ -704,11 +704,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         </table>
       </div>
     </div>
- 
+
   </div><!-- /tab-alertas2 -->
- 
+
 </div><!-- /main -->
- 
+
 <!-- TICKER -->
 <div class="ticker">
   <span style="font-size:9px;letter-spacing:1px">SEMÁFORO ENCOL.:</span>
@@ -718,7 +718,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
   <span style="color:var(--border2)">|</span>
   <span>Última actualización: <span id="tickTs" style="color:var(--text2)">—</span></span>
 </div>
- 
+
 <script>
 // ═══════════════════════════════
 //  ESTADO GLOBAL
@@ -733,12 +733,16 @@ const S = {
     t1:[],t2:[],t3:[],t4:[],tTotal:[],// tiempos globales
     byCity:{}                         // stats por ciudad
   },
-  active: [],   // órdenes activas snapshot
+  active: [],
   seen: new Set(),
   timer: null,
-  currentTab: 'general'
+  currentTab: 'general',
+  tiempos: {
+    loading:false, done:false,
+    envAsig:[], asigPick:[], pickTerm:[], termFin:[], total:[], gt60:[]
+  }
 };
- 
+
 // ═══════════════════════════════
 //  CONFIG
 // ═══════════════════════════════
@@ -759,7 +763,7 @@ function saveConfig() { localStorage.setItem('acfg',JSON.stringify(cfg())); fetc
     if(s.ps) document.getElementById('cfPage').value=s.ps;
   }catch(e){}
 })();
- 
+
 // ═══════════════════════════════
 //  TABS
 // ═══════════════════════════════
@@ -773,7 +777,7 @@ function switchTab(name) {
   });
   S.currentTab=name;
 }
- 
+
 // ═══════════════════════════════
 //  FETCH
 // ═══════════════════════════════
@@ -782,7 +786,7 @@ async function fetchAll() {
   let page=1, all=[], more=true, maxPages=100;
   let todayStr=null; // Lo fijamos desde la PRIMERA orden del API
   const lupd=document.getElementById('lupd');
- 
+
   while(more && page<=maxPages){
     if(lupd) lupd.textContent=`Cargando p.${page}...`;
     const params=new URLSearchParams({page,pageSize:c.ps,country:c.cou,endpoint:c.ep,apikey:c.key});
@@ -793,7 +797,7 @@ async function fetchAll() {
     let d;
     try{ d=await r.json(); }catch(e){ throw new Error('Respuesta no válida del proxy.'); }
     if(d.error) throw new Error(d.error+(d.detail?' — '+d.detail:''));
- 
+
     const ords=Array.isArray(d)?d:(d.data&&d.data.orders)?d.data.orders:(d.orders||d.data||d.results||[]);
     if(page===1){
       if(ords.length===0) throw new Error('El API respondió sin órdenes. Verifica COUNTRY y API key.');
@@ -807,16 +811,16 @@ async function fetchAll() {
         return st!=='FINALIZADA'&&st!=='CANCELADA';
       });
     }
- 
+
     all=all.concat(ords);
- 
+
     // ¿La última orden de esta página es de ayer? → ya tenemos todo el día
     const lastDate=(ords[ords.length-1]||{}).createDate||'';
     const hitYesterday=todayStr && lastDate && !lastDate.startsWith(todayStr);
- 
+
     const pagination=d.data&&d.data.pagination||null;
     const totalPages=pagination?pagination.totalPages:(d.totalPages||null);
- 
+
     if(hitYesterday || ords.length<c.ps || (totalPages&&page>=totalPages)){
       more=false;
     } else {
@@ -825,7 +829,7 @@ async function fetchAll() {
   }
   return all;
 }
- 
+
 async function fetchNow() {
   const dot=document.getElementById('sdot');
   dot.style.background='var(--yellow-t)';
@@ -841,6 +845,13 @@ async function fetchNow() {
     const ords=await fetchAll();
     process(ords);
     render();
+
+    // Calcular tiempos por etapa en paralelo (no bloquea el dashboard)
+    // Toma las órdenes finalizadas del día y muestrea 200 distribuidas en 4 franjas
+    const finOrds = ords.filter(o => (o.state||'').toUpperCase().trim() === 'FINALIZADA');
+    if (finOrds.length > 0 && !S.tiempos.loading) {
+      fetchTimings(finOrds); // corre en segundo plano
+    }
     dot.style.background='var(--green-t)';
     const ts=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     document.getElementById('lupd').textContent=`Actualizado ${ts}`;
@@ -852,11 +863,11 @@ async function fetchNow() {
     render();
   }
 }
- 
+
 // ═══════════════════════════════
 //  PROCESO DE ÓRDENES
 // ═══════════════════════════════
- 
+
 const CITY_NAMES={
   'BOG':'Bogotá','BAR':'Barranquilla','ALI':'Cali','MED':'Medellín',
   'CTG':'Cartagena','BUC':'Bucaramanga','PER':'Pereira','MAN':'Manizales',
@@ -868,7 +879,7 @@ const CITY_NAMES={
   'MOC':'Mocoa','QUI':'Quibdó','SJG':'San José del Guaviare','CHI':'Chía','SOA':'Sopó','ZIP':'Zipaquirá','FAC':'Facatativá','AMU':'Armero','RIO':'Rionegro',
 };
 function cityName(id){ return CITY_NAMES[id]||id||'Desconocida'; }
- 
+
 // Estados del API de Armi
 // ENVIADA=en cola sin mensajero, ASIGNADA=mensajero asignado
 // PICKING=mensajero recogiendo, PICKING TERMINADO=listo para entregar
@@ -878,31 +889,31 @@ function isFin(state){ return (state||'').toUpperCase().trim()==='FINALIZADA'; }
 function isCan(state){ return (state||'').toUpperCase().trim()==='CANCELADA'; }
 function isEnv(state){ return (state||'').toUpperCase().trim()==='ENVIADA'; }
 function isAsig(state){ return (state||'').toUpperCase().trim()==='ASIGNADA'; }
- 
+
 function process(ords) {
   // "hoy" viene fijado desde la primera orden del API en fetchAll
   const today=window._armiTodayDate||localToday();
   const d=S.day;
- 
+
   ords.forEach(o=>{
     const id=o.orderId||o.businessOrderId||o.id;
     if(!id) return;
- 
+
     // Filtrar solo órdenes de hoy usando createDate del API
     const created=(o.createDate||'').slice(0,10);
     if(created && created!==today) return;
- 
+
     const cityId=(o.cityId||o.city||'').trim();
     const city=cityName(cityId);
     if(!d.byCity[city]) d.byCity[city]={fin:0,can:0,otros:0,total:0,canLt15:0,canGt15:0,gt60:0,t1:[],t2:[],t3:[],t4:[],tTotal:[],env:0,asig:0};
- 
+
     const state=(o.state||o.status||'').toUpperCase().trim();
- 
+
     if(!S.seen.has(id)){
       S.seen.add(id);
       d.total++;
       d.byCity[city].total++;
- 
+
       if(state==='FINALIZADA'){
         d.fin++;
         d.byCity[city].fin++;
@@ -915,7 +926,7 @@ function process(ords) {
         const tao=parseFloat(o.tao)||0;
         if(tao>0){ d.t1.push(tao); d.byCity[city].t1.push(tao); }
         if(tao>15) d.envPickGt15++;
- 
+
       } else if(state==='CANCELADA'){
         d.can++;
         d.byCity[city].can++;
@@ -935,11 +946,11 @@ function process(ords) {
       }
     }
   });
- 
+
   // S.active ya fue asignado desde la página 1 en fetchAll (tiempo real)
   // No lo sobreescribimos aquí para no mezclar órdenes viejas del día
 }
- 
+
 function calcTimes(o){
   const ts=k=>{const v=o[k]||o[toCam(k)]||o[toSnk(k)];return v?new Date(v).getTime():null;};
   const sent=ts('sentAt')||ts('sendAt')||ts('enviadaAt');
@@ -955,7 +966,7 @@ function calcTimes(o){
     tTotal:sent&&fin?(fin-sent)/60000:null
   };
 }
- 
+
 function minsSince(o){
   // tp ya viene calculado en minutos desde el API de Armi
   const tp=parseFloat(o.tp);
@@ -963,7 +974,7 @@ function minsSince(o){
   const v=o.createDate||o.createdAt||o.created_at;
   return v?(Date.now()-new Date(v.replace(' ','T')).getTime())/60000:null;
 }
- 
+
 function toCam(s){return s.replace(/_([a-z])/g,(_,c)=>c.toUpperCase());}
 // Fecha local robusta: la extraemos del createDate de las órdenes mismas.
 // Las órdenes vienen ordenadas más reciente primero — la primera orden
@@ -993,7 +1004,7 @@ function det(id,num,den,lblNum,lblDen){
   if(!el) return;
   el.innerHTML=`<span>${num}</span> órdenes`;
 }
- 
+
 // ═══════════════════════════════
 //  ENCOLAMIENTO HELPERS
 // ═══════════════════════════════
@@ -1036,10 +1047,10 @@ function encolCiudad() {
   const tao=allTaos.length?allTaos.reduce((a,b)=>a+b,0)/allTaos.length:0;
   return{cities,total:{env:tEnv,asig:tAsig,pick:tPick,cam:tCam,tot,gt30:tGt30,tao,pct:tot?Math.round(tEnv/tot*100):0}};
 }
- 
+
 function isPicking(st){ const s=(st||'').toUpperCase().trim(); return s==='PICKING'||s==='PICKING TERMINADO'; }
 function isEnCamino(st){ const s=(st||'').toUpperCase().trim(); return s==='EN CAMINO'||s==='EN PUNTO DE ENTREGA'; }
- 
+
 function encol(group, keyField) {
   const map={};
   S.active.forEach(o=>{
@@ -1060,7 +1071,7 @@ function encol(group, keyField) {
     return{key:k,env:d.env,asig:d.asig,pick:d.pick,cam:d.cam,tot,pct:tot?Math.round(d.env/tot*100):0};
   }).sort((a,b)=>b.pct-a.pct||b.tot-a.tot);
 }
- 
+
 function encolTienda() {
   const map={};
   S.active.forEach(o=>{
@@ -1080,22 +1091,22 @@ function encolTienda() {
     return{store:k,brand:d.brand,city:d.city,env:d.env,asig:d.asig,pick:d.pick,cam:d.cam,tot,pct:tot?Math.round(d.env/tot*100):0};
   }).sort((a,b)=>b.pct-a.pct||b.tot-a.tot);
 }
- 
+
 // ═══════════════════════════════
 //  RENDER
 // ═══════════════════════════════
 function cls(p){return p<15?'g':p<40?'y':'r';}
- 
+
 function bar(p){
   const c=cls(p);
   return`<div class="pw"><div class="pb"><div class="pf ${c}" style="width:${Math.min(p,100)}%"></div></div><div class="pp ${c}">${p}%</div></div>`;
 }
- 
+
 function render(){
   const d=S.day;
   const tc=d.total||1;
   const fc=d.fin||1;
- 
+
   // KPIs
   set('k-fin',d.fin);
   set('k-can',d.can);
@@ -1106,16 +1117,9 @@ function render(){
   det('d-can15', d.canLt15, tc, 'cancel <15', 'creadas');
   set('k-can15p',pct(d.canGt15,tc)+'%');
   det('d-can15p', d.canGt15, tc, 'cancel >15', 'creadas');
-  set('k-tp',fmt(avg(d.tTotal)));
-  set('k-gt60',pct(d.gt60fin,d.fin)+'%');
-  det('d-gt60', d.gt60fin, d.fin, '>60 min', 'finalizadas');
-  set('k-t1',fmt(avg(d.t1)));
-  set('k-t2',fmt(avg(d.t2)));
-  set('k-t3',fmt(avg(d.t3)));
-  set('k-t4',fmt(avg(d.t4)));
-  set('k-envpick15',pct(d.envPickGt15,d.fin)+'%');
-  det('d-envpick15', d.envPickGt15, d.fin, 'env+pick>15', 'finalizadas');
- 
+  // Tiempos por etapa — gestionados por fetchTimings() + renderTimings()
+  renderTimings();
+
   // Encolamiento ciudad — con fila TOTAL y columnas TAO y >30min
   const cius=encolCiudad();
   set('cnt-ciu',`${cius.cities.length} ciudades`);
@@ -1140,39 +1144,39 @@ function render(){
     </tr>`).join('')
     :'<tr><td colspan="9" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin órdenes activas</td></tr>';
   document.getElementById('tb-ciu').innerHTML=totalRow+cityRows;
- 
+
   // Encolamiento marca
   const mrcs=encol(S.active,'businessName');
   set('cnt-mrc',`${mrcs.length} marcas`);
   initFilters();
   populateFilter(_msMarca, mrcs.map(r=>r.key));
   renderMarca(mrcs);
- 
+
   // Encolamiento tienda
   const ties=encolTienda();
   set('cnt-tie',`${ties.length} tiendas`);
   populateFilter(_msTiendaBrand, [...new Set(ties.map(r=>r.brand))].sort());
   populateFilter(_msTiendaStore, ties.map(r=>r.store));
   renderTienda(ties);
- 
+
   // Deep ciudad
   renderDeepCiudad();
- 
+
   // Deep KM/TP
   renderDeepOrdenes();
   // Sin movimiento + canceladas
   renderAlertas2();
 }
- 
+
 function renderEncol(tbId, rows, rowFn, cols) {
   const el=document.getElementById(tbId);
   if(!rows.length){el.innerHTML=`<tr><td colspan="${cols}" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin órdenes activas</td></tr>`;return;}
   el.innerHTML=rows.map(rowFn).join('');
 }
- 
+
 // ── Sort state ──
 const _sort={mrc:{col:'pct',asc:false}, tie:{col:'pct',asc:false}};
- 
+
 function sortEncol(tbl, col){
   if(_sort[tbl].col===col) _sort[tbl].asc=!_sort[tbl].asc;
   else { _sort[tbl].col=col; _sort[tbl].asc=false; }
@@ -1185,13 +1189,13 @@ function sortEncol(tbl, col){
   if(arrow) arrow.textContent=_sort[tbl].asc?'↑':'↓';
   render();
 }
- 
+
 function populateFilter(msInst, values){
   if(!msInst) return;
   const unique=[...new Set(values)].sort();
   msInst.setOptions(unique);
 }
- 
+
 function initFilters(){
   if(!_msMarca){
     _msMarca=new MultiSelect('ms-mrc',()=>render());
@@ -1203,7 +1207,7 @@ function initFilters(){
     _msTiendaStore=new MultiSelect('ms-tie-store',()=>render());
   }
 }
- 
+
 function sortRows(rows, col, asc){
   return [...rows].sort((a,b)=>{
     const va=a[col]??''; const vb=b[col]??'';
@@ -1211,7 +1215,7 @@ function sortRows(rows, col, asc){
     return asc?va.localeCompare(vb):vb.localeCompare(va);
   });
 }
- 
+
 function renderMarca(mrcs){
   const selected=_msMarca?_msMarca.getSelected():[];
   let rows=selected.length?mrcs.filter(r=>selected.includes(r.key)):mrcs;
@@ -1228,7 +1232,7 @@ function renderMarca(mrcs){
     <td><strong>${r.tot}</strong></td>
   </tr>`).join('');
 }
- 
+
 function renderTienda(ties){
   const selBrand=_msTiendaBrand?_msTiendaBrand.getSelected():[];
   const selStore=_msTiendaStore?_msTiendaStore.getSelected():[];
@@ -1250,12 +1254,12 @@ function renderTienda(ties){
     <td><strong>${r.tot}</strong></td>
   </tr>`).join('');
 }
- 
+
 function renderDeepCiudad() {
   const d=S.day;
   const cities=Object.keys(d.byCity).sort();
   set('cnt-deepciu',`${cities.length} ciudades`);
- 
+
   // Calcular encolamiento activo por ciudad
   const enColCiu={};
   S.active.forEach(o=>{
@@ -1264,10 +1268,10 @@ function renderDeepCiudad() {
     if(isEnv(o.state||o.status||'')) enColCiu[city].env++;
     enColCiu[city].tot++;
   });
- 
+
   const tbody=document.getElementById('tb-deepciu-body');
   if(!cities.length){tbody.innerHTML=`<tr><td colspan="10" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono)">Sin datos</td></tr>`;return;}
- 
+
   tbody.innerHTML=cities.map(city=>{
     const c=d.byCity[city];
     const ec=enColCiu[city]||{env:0,tot:0};
@@ -1292,7 +1296,7 @@ function renderDeepCiudad() {
       <td>${ec.tot}</td>
     </tr>`;
   }).join('');
- 
+
   // Tiempos por ciudad
   const tbody2=document.getElementById('tb-tiempociu-body');
   tbody2.innerHTML=cities.map(city=>{
@@ -1315,7 +1319,7 @@ function renderDeepCiudad() {
     </tr>`;
   }).join('');
 }
- 
+
 function renderDeepOrdenes() {
   // tao y distance vienen directamente del API de Armi
   const withTao = S.active.map(o=>{
@@ -1324,18 +1328,18 @@ function renderDeepOrdenes() {
     const id=o.orderId||o.id||'—';
     return{id,tao,km,o};
   }).filter(x=>x.tao>0||x.km>0);
- 
+
   // KM buckets
   const km0=withTao.filter(x=>x.km>=0&&x.km<4).sort((a,b)=>b.tao-a.tao);
   const km4=withTao.filter(x=>x.km>=4&&x.km<6).sort((a,b)=>b.tao-a.tao);
   const km6=withTao.filter(x=>x.km>=6&&x.km<8).sort((a,b)=>b.tao-a.tao);
   const km8=withTao.filter(x=>x.km>=8).sort((a,b)=>b.tao-a.tao);
- 
+
   // TP buckets
   const tp30=withTao.filter(x=>x.tao>=30&&x.tao<45).sort((a,b)=>b.tao-a.tao);
   const tp45=withTao.filter(x=>x.tao>=45&&x.tao<60).sort((a,b)=>b.tao-a.tao);
   const tp60=withTao.filter(x=>x.tao>=60).sort((a,b)=>b.tao-a.tao);
- 
+
   renderOidCol('deep-km0','cnt-km0',km0,'b',x=>`${x.km.toFixed(1)} km | ${x.tao.toFixed(0)} min`);
   renderOidCol('deep-km4','cnt-km4',km4,'g',x=>`${x.km.toFixed(1)} km | ${x.tao.toFixed(0)} min`);
   renderOidCol('deep-km6','cnt-km6',km6,'y',x=>`${x.km.toFixed(1)} km | ${x.tao.toFixed(0)} min`);
@@ -1344,7 +1348,7 @@ function renderDeepOrdenes() {
   renderOidCol('deep-tp45','cnt-tp45',tp45,'y',x=>`${x.tao.toFixed(0)} min`);
   renderOidCol('deep-tp60','cnt-tp60',tp60,'r',x=>`${x.tao.toFixed(0)} min`);
 }
- 
+
 function renderOidCol(colId,cntId,rows,colorCls,valFn){
   const el=document.getElementById(colId);
   const cnt=document.getElementById(cntId);
@@ -1356,9 +1360,9 @@ function renderOidCol(colId,cntId,rows,colorCls,valFn){
       <span class="oid-val ${colorCls==='g'?'lbl-green':colorCls==='y'?'lbl-yellow':colorCls==='b'?'lbl-armi':'lbl-red'}">${valFn(x)}</span>
     </div>`).join('');
 }
- 
+
 function set(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
- 
+
 // ═══════════════════════════════
 //  DEMO DATA
 // ═══════════════════════════════
@@ -1368,18 +1372,18 @@ function demoData(){
   d.canLt15=9;d.canGt15=29;d.gt60fin=22;
   d.t1=rnd(80,5,13);d.t2=rnd(80,3,9);d.t3=rnd(80,4,14);d.t4=rnd(80,10,20);
   d.tTotal=rnd(80,25,55);
- 
+
   const brands=['Takami','El Corral','Sipote Burrito','Veccina','Central Cevichería'];
   const cities=['Bogotá','Medellín','Cartagena','Pereira','Barranquilla','Cali','Bucaramanga','Chía'];
   const stores=['Osaki 118','Osaki Calle 71','Centro Mayor','Manga','Av. Las Américas','El Corral 93','El Corral Andino','Sipote 140','Veccina Av 19'];
   const statuses=['sent','sent','sent','assigned','assigned','picking','picking_terminated'];
- 
+
   // Poblar byCity
   cities.forEach(c=>{
     d.byCity[c]={fin:Math.floor(15+Math.random()*60),can:Math.floor(2+Math.random()*15),otros:Math.floor(3+Math.random()*20),total:0,canLt15:Math.floor(Math.random()*5),canGt15:Math.floor(Math.random()*10),gt60:Math.floor(Math.random()*8),t1:rnd(15,5,12),t2:rnd(15,3,8),t3:rnd(15,4,14),t4:rnd(15,10,22),tTotal:rnd(15,25,55)};
     d.byCity[c].total=d.byCity[c].fin+d.byCity[c].can+d.byCity[c].otros;
   });
- 
+
   // Poblar canceladas demo
   const dBrands=['Takami','El Corral','Sipote Burrito','Veccina'];
   const dCities=['Bogotá','Medellín','Cartagena','Pereira','Barranquilla'];
@@ -1392,7 +1396,7 @@ function demoData(){
       store:dStores[i%dStores.length],km:1+Math.random()*10,tCan,hora,
       tramo:tCan<5?'<5 min':tCan<15?'5–15 min':'>15 min'};
   });
- 
+
   S.active=Array(68).fill(0).map((_,i)=>({
     id:`5${400000+i}`,
     businessName:brands[i%brands.length],
@@ -1403,10 +1407,10 @@ function demoData(){
     sentAt:new Date(Date.now()-(10+Math.random()*80)*60000).toISOString()
   }));
 }
- 
+
 function renderAlertas2(){
   const umbral=parseInt(document.getElementById('umbralMin').value)||15;
- 
+
   // ── ÓRDENES SIN MOVIMIENTO ──────────────────────────────
   const sinMov=S.active.filter(o=>{
     if(!isEnv(o.state||o.status||o.estado||'')) return false;
@@ -1424,7 +1428,7 @@ function renderAlertas2(){
       st:(o.state||o.status||'').trim()
     };
   }).sort((a,b)=>b.mins-a.mins);
- 
+
   set('cnt-sinmov',`${sinMov.length} órdenes sin movimiento`);
   const tbSM=document.getElementById('tb-sinmov');
   if(!sinMov.length){
@@ -1443,11 +1447,11 @@ function renderAlertas2(){
       </tr>`;
     }).join('');
   }
- 
+
   // ── CANCELADAS DEL DÍA ─────────────────────────────────
   const cans=S.day.canceladas;
   const nCan=cans.length;
- 
+
   set('can-total',nCan);
   const lt5=cans.filter(x=>x.tCan<5).length;
   const m5_15=cans.filter(x=>x.tCan>=5&&x.tCan<15).length;
@@ -1457,7 +1461,7 @@ function renderAlertas2(){
   set('can-5-15',m5_15);
   set('can-gt15',gt15);
   set('can-tprom',tProm.toFixed(1)+' min');
- 
+
   // Ciudad top
   const byCiu={};
   cans.forEach(x=>{if(!byCiu[x.city])byCiu[x.city]={n:0,lt5:0,m515:0,gt15:0,ts:[]};
@@ -1469,7 +1473,7 @@ function renderAlertas2(){
   });
   const ciuArr=Object.entries(byCiu).map(([k,v])=>({k,n:v.n,lt5:v.lt5,m515:v.m515,gt15:v.gt15,tp:v.ts.reduce((a,b)=>a+b,0)/v.ts.length})).sort((a,b)=>b.n-a.n);
   if(ciuArr.length){set('can-ciudad-top',ciuArr[0].k);set('can-ciudad-top-n',`${ciuArr[0].n} canceladas`);}
- 
+
   // Tabla ciudad
   const tbCC=document.getElementById('tb-can-ciudad');
   tbCC.innerHTML=ciuArr.length
@@ -1482,7 +1486,7 @@ function renderAlertas2(){
         <td style="font-family:var(--mono)">${r.tp.toFixed(1)} min</td>
       </tr>`).join('')
     :'<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin canceladas hoy</td></tr>';
- 
+
   // Tabla marca
   const byMrc={};
   cans.forEach(x=>{if(!byMrc[x.brand])byMrc[x.brand]={n:0,lt5:0,m515:0,gt15:0,ts:[]};
@@ -1504,7 +1508,7 @@ function renderAlertas2(){
         <td style="font-family:var(--mono)">${r.tp.toFixed(1)} min</td>
       </tr>`).join('')
     :'<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin canceladas hoy</td></tr>';
- 
+
   // Heatmap horario
   const byHora=Array(24).fill(0);
   cans.forEach(x=>{ if(x.hora>=0&&x.hora<24) byHora[x.hora]++; });
@@ -1531,7 +1535,7 @@ function renderAlertas2(){
     </div>`;
   }).join('');
   lDiv.innerHTML=horas.map(h=>`<div style="flex:1;text-align:center;font-family:var(--mono);font-size:9px;color:var(--text3)">${h}h</div>`).join('');
- 
+
   // Detalle últimas 50
   const ultimas=cans.slice(-50).reverse();
   const tbCD=document.getElementById('tb-can-detalle');
@@ -1552,9 +1556,9 @@ function renderAlertas2(){
     }).join('')
     :'<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Sin canceladas registradas hoy</td></tr>';
 }
- 
+
 function rnd(n,min,max){return Array(n).fill(0).map(()=>min+Math.random()*(max-min));}
- 
+
 // ═══════════════════════════════
 //  ERROR
 // ═══════════════════════════════
@@ -1566,12 +1570,12 @@ function showErr(m){
     <span style="opacity:.8;font-size:10px">Se muestran datos de demostración.${isCors?' — <strong>Si ves CORS</strong>: el API debe habilitar acceso desde el navegador. Solución rápida: agrega el header <code>Access-Control-Allow-Origin: *</code> en el API de Armi, o usa un proxy CORS.':''}</span>`;
 }
 function hideErr(){document.getElementById('errBox').style.display='none';}
- 
+
 // ═══════════════════════════════
 //  TIMER
 // ═══════════════════════════════
 let _paused=false;
- 
+
 function togglePause(){
   _paused=!_paused;
   const btn=document.getElementById('btnPause');
@@ -1590,7 +1594,7 @@ function togglePause(){
     startTimer();
   }
 }
- 
+
 function startTimer(){
   if(_paused) return; // No iniciar si está pausado
   if(S.timer) clearInterval(S.timer);
@@ -1599,7 +1603,7 @@ function startTimer(){
 document.getElementById('isel').addEventListener('change',()=>{
   if(!_paused) startTimer();
 });
- 
+
 // ── TEMA ──────────────────────────────────
 function toggleTheme(){
   const body=document.body;
@@ -1617,8 +1621,8 @@ function toggleTheme(){
     document.getElementById('themeLabel').textContent='CLARO';
   }
 })();
- 
- 
+
+
 // ══════════════════════════════════════════════════════
 //  MultiSelect — búsqueda + tags + multi-selección
 // ══════════════════════════════════════════════════════
@@ -1689,9 +1693,172 @@ class MultiSelect {
   getSelected(){ return [...this.selected]; }
   clear(){ this.selected.clear(); this._renderTags(); this._filter(); this.onChange(); }
 }
- 
+
 // Instancias globales de los filtros
 let _msMarca, _msTiendaBrand, _msTiendaStore;
+
+// ══════════════════════════════════════════════════════════════════
+//  TIEMPOS POR ETAPA — endpoint 2 con muestra de 200 órdenes
+//  Distribuidas en 4 franjas horarias del día (50 por franja)
+// ══════════════════════════════════════════════════════════════════
+
+function minutesBetween(dateA, dateB) {
+  // dateA y dateB en formato "YYYY-MM-DD HH:MM:SS"
+  const a = new Date(dateA.replace(' ', 'T'));
+  const b = new Date(dateB.replace(' ', 'T'));
+  return (b - a) / 60000;
+}
+
+function calcTimesFromStatus(orderStatus) {
+  // Extrae timestamps por estado
+  const ts = {};
+  (orderStatus || []).forEach(s => { ts[s.statusName] = s.statusDate; });
+
+  const envDate   = ts['ENVIADA'];
+  const asigDate  = ts['ASIGNADA'];
+  const pickDate  = ts['PICKING'];
+  const termDate  = ts['PICKING TERMINADO'];
+  const finDate   = ts['FINALIZADA'] || ts['ENTREGADA'];
+
+  if (!envDate || !asigDate || !pickDate || !termDate || !finDate) return null;
+
+  const t1 = minutesBetween(envDate, asigDate);
+  const t2 = minutesBetween(asigDate, pickDate);
+  const t3 = minutesBetween(pickDate, termDate);
+  const t4 = minutesBetween(termDate, finDate);
+
+  // Regla de negocio: si CUALQUIER etapa es 0 o negativa → excluir TODA la orden
+  if (t1 <= 0 || t2 <= 0 || t3 <= 0 || t4 <= 0) return null;
+
+  return { t1, t2, t3, t4, total: t1 + t2 + t3 + t4 };
+}
+
+function selectSample(finOrders) {
+  // Distribuir en 4 franjas horarias — 50 por franja = 200 total
+  const franjas = { '0-6': [], '6-12': [], '12-18': [], '18-24': [] };
+
+  finOrders.forEach(o => {
+    const cd = o.createDate || o.createdAt || '';
+    const hour = parseInt((cd.split(' ')[1] || '0').split(':')[0]) || 0;
+    if (hour < 6) franjas['0-6'].push(o);
+    else if (hour < 12) franjas['6-12'].push(o);
+    else if (hour < 18) franjas['12-18'].push(o);
+    else franjas['18-24'].push(o);
+  });
+
+  const sample = [];
+  Object.values(franjas).forEach(franja => {
+    // Tomar 50 aleatorios de cada franja (o todos si hay menos de 50)
+    const shuffled = franja.sort(() => Math.random() - 0.5).slice(0, 50);
+    sample.push(...shuffled);
+  });
+
+  return sample;
+}
+
+async function fetchTimings(finOrders) {
+  if (S.tiempos.loading) return;
+  S.tiempos.loading = true;
+  S.tiempos.done = false;
+
+  // Reiniciar arrays
+  S.tiempos.envAsig = [];
+  S.tiempos.asigPick = [];
+  S.tiempos.pickTerm = [];
+  S.tiempos.termFin = [];
+  S.tiempos.total = [];
+  S.tiempos.gt60 = [];
+
+  const sample = selectSample(finOrders);
+  const c = cfg();
+
+  // Mostrar progreso en el header
+  const lupd = document.getElementById('lupd');
+  let done = 0;
+
+  // Procesar en lotes de 10 en paralelo para mayor velocidad
+  const BATCH = 10;
+  for (let i = 0; i < sample.length; i += BATCH) {
+    const batch = sample.slice(i, i + BATCH);
+
+    await Promise.all(batch.map(async o => {
+      // orderId viene como "B419450" → necesitamos "419450"
+      const rawId = o.orderId || o.id || '';
+      const numId = rawId.replace(/^[A-Za-z]+/, '');
+      if (!numId) return;
+
+      try {
+        const params = new URLSearchParams({
+          mode: 'order',
+          orderId: numId,
+          country: c.cou
+        });
+        const r = await fetch('/api/proxy?' + params);
+        if (!r.ok) return;
+        const d = await r.json();
+
+        // El endpoint devuelve el order con orderStatus array
+        const orderStatus = d?.orderStatus || d?.data?.getArmiOrder?.order?.orderStatus || [];
+        const times = calcTimesFromStatus(orderStatus);
+        if (!times) return; // excluir si alguna etapa es 0
+
+        S.tiempos.envAsig.push(times.t1);
+        S.tiempos.asigPick.push(times.t2);
+        S.tiempos.pickTerm.push(times.t3);
+        S.tiempos.termFin.push(times.t4);
+        S.tiempos.total.push(times.total);
+        if (times.total > 60) S.tiempos.gt60.push(times.total);
+
+      } catch(e) { /* ignorar errores individuales */ }
+
+      done++;
+      if (lupd) lupd.textContent = `Tiempos: ${done}/${sample.length}…`;
+    }));
+
+    // Actualizar render parcial cada lote
+    renderTimings();
+  }
+
+  S.tiempos.loading = false;
+  S.tiempos.done = true;
+  if (lupd) lupd.textContent = `Actualizado ${new Date().toLocaleTimeString('es-CO')}`;
+  renderTimings();
+}
+
+function avg(arr) {
+  if (!arr || !arr.length) return null;
+  return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
+
+function renderTimings() {
+  const t = S.tiempos;
+  const fmt = v => v !== null ? v.toFixed(1) : '—';
+  const pct = (a, b) => b > 0 ? Math.round(a / b * 100) + '%' : '0%';
+
+  // KPIs de tiempos
+  set('k-tp', fmt(avg(t.total)));
+  set('k-t1', fmt(avg(t.envAsig)));
+  set('k-t2', fmt(avg(t.asigPick)));
+  set('k-t3', fmt(avg(t.pickTerm)));
+  set('k-t4', fmt(avg(t.termFin)));
+
+  // % órdenes >60 min (sobre la muestra)
+  const totalSample = t.total.length;
+  set('k-gt60', pct(t.gt60.length, totalSample));
+  det('d-gt60', t.gt60.length, totalSample, '>60 min', 'muestreadas');
+
+  // % env+pick >15 min
+  const envPickGt15 = t.envAsig.filter((v,i) => v + (t.asigPick[i]||0) > 15).length;
+  set('k-envpick15', pct(envPickGt15, totalSample));
+  det('d-envpick15', envPickGt15, totalSample, 'env+pick>15', 'muestreadas');
+
+  // Indicador de carga
+  const loading = t.loading ? ` (${t.total.length} procesadas…)` : '';
+  const sampleInfo = totalSample > 0 ? ` · muestra ${totalSample}` : '';
+  const subtitle = document.getElementById('sub-tiempos');
+  if (subtitle) subtitle.textContent = 'Promedio sobre muestra de órdenes finalizadas · min' + sampleInfo + loading;
+}
+
 // INIT
 fetchNow();
 startTimer();
