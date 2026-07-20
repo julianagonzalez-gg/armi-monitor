@@ -256,6 +256,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
   <div class="tab" onclick="switchTab('ciudades')">Deep por ciudad</div>
   <div class="tab" onclick="switchTab('alertas')">Deep ordenes · KM &amp; TP</div>
   <div class="tab" onclick="switchTab('alertas2')">Sin movimiento &amp; Canceladas</div>
+  <div class="tab" onclick="switchTab('picker')" style="color:var(--yellow-t)">📦 Picker</div>
 </div>
 
 <div class="main">
@@ -707,6 +708,114 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 
   </div><!-- /tab-alertas2 -->
 
+  <!-- ═══════════════════════════════ TAB PICKER ═══════════════════════════════ -->
+  <div id="tab-picker" class="tab-content">
+    <div class="panel">
+      <div class="ph">
+        <div class="pt">📦 Monitor Picker — CAARRY PKR COL S.A.S</div>
+        <div class="pc">Cancelaciones exclusivas de comercios Picker · acumulado día</div>
+      </div>
+    </div>
+
+    <!-- KPIs Picker -->
+    <div class="krow" style="margin-bottom:8px">
+      <div class="kpi r">
+        <div class="kpi-lbl">Total canceladas Picker</div>
+        <div class="kpi-val" id="pk-can-total">—</div>
+        <div class="kpi-sub">del día</div>
+      </div>
+      <div class="kpi y">
+        <div class="kpi-lbl">Canceladas &lt;5 min</div>
+        <div class="kpi-val" id="pk-can-lt5">—</div>
+        <div class="kpi-sub">sin tiempo de gestión</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lbl">Canceladas 5–15 min</div>
+        <div class="kpi-val" id="pk-can-5-15">—</div>
+        <div class="kpi-sub">zona gris</div>
+      </div>
+      <div class="kpi r">
+        <div class="kpi-lbl">Canceladas &gt;15 min</div>
+        <div class="kpi-val" id="pk-can-gt15">—</div>
+        <div class="kpi-sub">responsabilidad Armi</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-lbl">T prom. cancelación</div>
+        <div class="kpi-val" id="pk-can-tprom">—</div>
+        <div class="kpi-sub">min desde creación</div>
+      </div>
+    </div>
+
+    <!-- Tablas Picker -->
+    <div class="g2">
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">Canceladas Picker · Por ciudad</div>
+          <div class="pc">ordenado por cantidad desc</div>
+        </div>
+        <div class="ts">
+          <table class="tbl">
+            <thead><tr>
+              <th>Ciudad</th>
+              <th class="r">Total</th>
+              <th class="r">&lt;5 min</th>
+              <th class="r">5–15 min</th>
+              <th class="r">&gt;15 min</th>
+              <th class="r">T prom.</th>
+            </tr></thead>
+            <tbody id="tb-pk-ciudad">
+              <tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Cargando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">Canceladas Picker · Por tienda</div>
+          <div class="pc">ordenado por cantidad desc</div>
+        </div>
+        <div class="ts">
+          <table class="tbl">
+            <thead><tr>
+              <th>Tienda</th>
+              <th>Ciudad</th>
+              <th class="r">Total</th>
+              <th class="r">&lt;5 min</th>
+              <th class="r">5–15 min</th>
+              <th class="r">&gt;15 min</th>
+              <th class="r">T prom.</th>
+            </tr></thead>
+            <tbody id="tb-pk-tienda">
+              <tr><td colspan="7" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Cargando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalle canceladas Picker -->
+    <div class="panel">
+      <div class="ph">
+        <div class="pt">Últimas 100 cancelaciones Picker</div>
+        <div class="pc">ordenadas por tiempo de cancelación desc</div>
+      </div>
+      <div class="ts">
+        <table class="tbl">
+          <thead><tr>
+            <th>Order ID</th><th>Tienda</th><th>Ciudad</th>
+            <th class="r">Hora cancel.</th>
+            <th class="r">T cancel.</th>
+            <th class="r">Tramo</th>
+          </tr></thead>
+          <tbody id="tb-pk-detalle">
+            <tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text3);font-family:var(--mono);font-size:11px">Cargando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div><!-- /tab-picker -->
+
 </div><!-- /main -->
 
 <!-- TICKER -->
@@ -729,7 +838,8 @@ const S = {
     canLt15:0, canGt15:0,
     gt60fin:0,                        // finalizadas en >60 min
     envPickGt15:0,                    // finalizadas donde env+pick>15min
-    canceladas:[],                    // array detalle de canceladas {id,brand,city,store,tCan,km}
+    canceladas:[],                    // array detalle de canceladas (excluye Picker)
+    canceladasPicker:[],              // canceladas solo de CAARRY PKR
     t1:[],t2:[],t3:[],t4:[],tTotal:[],// tiempos globales
     byCity:{}                         // stats por ciudad
   },
@@ -739,7 +849,8 @@ const S = {
   currentTab: 'general',
   tiempos: {
     loading:false, done:false,
-    envAsig:[], asigPick:[], pickTerm:[], termFin:[], total:[], gt60:[]
+    envAsig:[], asigPick:[], pickTerm:[], termFin:[], total:[], gt60:[],
+    byCity:{}
   }
 };
 
@@ -769,7 +880,7 @@ function saveConfig() { localStorage.setItem('acfg',JSON.stringify(cfg())); fetc
 // ═══════════════════════════════
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t,i)=>{
-    const names=['general','ciudades','alertas','alertas2'];
+    const names=['general','ciudades','alertas','alertas2','picker'];
     t.classList.toggle('active',names[i]===name);
   });
   document.querySelectorAll('.tab-content').forEach(c=>{
@@ -837,12 +948,12 @@ async function fetchNow() {
   // ── Reiniciar estado del día en cada actualización ──
   // Traemos TODO el día de nuevo desde el API, así que reseteamos los contadores
   S.day={fin:0,can:0,otros:0,total:0,canLt15:0,canGt15:0,gt60fin:0,envPickGt15:0,
-    canceladas:[],t1:[],t2:[],t3:[],t4:[],tTotal:[],byCity:{}};
+    canceladas:[],canceladasPicker:[],t1:[],t2:[],t3:[],t4:[],tTotal:[],byCity:{}};
   S.seen=new Set();
   S.active=[];
   window._armiTodayDate=null;
   // Reset tiempos para recalcular en cada actualización
-  S.tiempos={loading:false,done:false,envAsig:[],asigPick:[],pickTerm:[],termFin:[],total:[],gt60:[]};
+  S.tiempos={loading:false,done:false,envAsig:[],asigPick:[],pickTerm:[],termFin:[],total:[],gt60:[],byCity:{}};
   try{
     const ords=await fetchAll();
     process(ords);
@@ -930,18 +1041,32 @@ function process(ords) {
         if(tao>15) d.envPickGt15++;
 
       } else if(state==='CANCELADA'){
-        d.can++;
-        d.byCity[city].can++;
-        const tCancel=parseFloat(o.tp)||0;
-        if(tCancel<15){ d.canLt15++; d.byCity[city].canLt15++; }
-        else { d.canGt15++; d.byCity[city].canGt15++; }
+        const isPicker=(o.businessName||'').includes('CAARRY PKR');
+        if(!isPicker){ // Picker excluido de métricas generales
+          d.can++;
+          d.byCity[city].can++;
+          const tCancel=parseFloat(o.tp)||0;
+          if(tCancel<15){ d.canLt15++; d.byCity[city].canLt15++; }
+          else { d.canGt15++; d.byCity[city].canGt15++; }
+        } else {
+          d.can++; // contamos para total pero separamos en canceladas
+          const tCancel=parseFloat(o.tp)||0;
+          if(tCancel<15) d.canLt15++;
+          else d.canGt15++;
+        }
         const brand=(o.businessName||'—').trim();
         const store=(o.branchOfficeName||'—').trim();
         const km=parseFloat(o.distance||0)||0;
         const horaRaw=(o.createDate||'').split(' ')[1]||'00:00';
-        const hora=horaRaw.slice(0,5); // HH:MM
-        d.canceladas.push({id,brand,city,store,km,tCan:tCancel,hora,
-          tramo:tCancel<5?'<5 min':tCancel<15?'5–15 min':'>15 min'});
+        const hora=horaRaw.slice(0,5);
+        const canEntry={id,brand,city,store,km,tCan:tCancel,hora,
+          tramo:tCancel<5?'<5 min':tCancel<15?'5–15 min':'>15 min'};
+        // Picker va solo a su propio array — excluido de métricas generales
+        if(brand.includes('CAARRY PKR')){
+          d.canceladasPicker.push(canEntry);
+        } else {
+          d.canceladas.push(canEntry);
+        }
       } else {
         d.otros++;
         d.byCity[city].otros++;
@@ -1168,6 +1293,8 @@ function render(){
   renderDeepOrdenes();
   // Sin movimiento + canceladas
   renderAlertas2();
+  // Picker
+  renderPicker();
 }
 
 function renderEncol(tbId, rows, rowFn, cols) {
@@ -1803,12 +1930,23 @@ async function fetchTimings(finOrders) {
         const times = calcTimesFromStatus(orderStatus);
         if (!times) return; // excluir si alguna etapa es 0
 
+        // cityId viene en d.data.cityId — lo convertimos a nombre
+        const cid = cityName((d?.data?.cityId || '').trim());
+
         S.tiempos.envAsig.push(times.t1);
         S.tiempos.asigPick.push(times.t2);
         S.tiempos.pickTerm.push(times.t3);
         S.tiempos.termFin.push(times.t4);
         S.tiempos.total.push(times.total);
         if (times.total > 60) S.tiempos.gt60.push(times.total);
+
+        // Acumular por ciudad
+        if (!S.tiempos.byCity[cid]) S.tiempos.byCity[cid] = {envAsig:[],asigPick:[],pickTerm:[],termFin:[],total:[]};
+        S.tiempos.byCity[cid].envAsig.push(times.t1);
+        S.tiempos.byCity[cid].asigPick.push(times.t2);
+        S.tiempos.byCity[cid].pickTerm.push(times.t3);
+        S.tiempos.byCity[cid].termFin.push(times.t4);
+        S.tiempos.byCity[cid].total.push(times.total);
 
       } catch(e) { /* ignorar errores individuales */ }
 
@@ -1853,6 +1991,123 @@ function renderTimings() {
   const sampleInfo = totalSample > 0 ? ` · muestra ${totalSample}` : '';
   const subtitle = document.getElementById('sub-tiempos');
   if (subtitle) subtitle.textContent = 'Promedio sobre muestra de órdenes finalizadas · min' + sampleInfo + loading;
+
+  // Actualizar tabla de tiempos por ciudad
+  const tbTC = document.getElementById('tb-tiempociu-body');
+  if (tbTC && Object.keys(t.byCity).length > 0) {
+    const cities = Object.keys(S.day.byCity).sort();
+    tbTC.innerHTML = cities.map(city => {
+      const tc = t.byCity[city] || {};
+      const n = (tc.total||[]).length;
+      const totalAvg = n > 0 ? avg(tc.total) : null;
+      const col = totalAvg ? (totalAvg > 45 ? 'var(--red-t)' : totalAvg > 30 ? 'var(--yellow-t)' : 'var(--green-t)') : 'var(--text3)';
+      return `<tr>
+        <td>${city}</td>
+        <td>${tc.envAsig?.length ? avg(tc.envAsig).toFixed(1) : '—'}</td>
+        <td>${tc.asigPick?.length ? avg(tc.asigPick).toFixed(1) : '—'}</td>
+        <td>${tc.pickTerm?.length ? avg(tc.pickTerm).toFixed(1) : '—'}</td>
+        <td>${tc.termFin?.length ? avg(tc.termFin).toFixed(1) : '—'}</td>
+        <td style="color:${col};font-weight:700">${totalAvg ? totalAvg.toFixed(1) : '—'}</td>
+        <td style="color:var(--text3);font-size:11px">${n}</td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+//  RENDER PICKER — Canceladas de CAARRY PKR COL S.A.S
+// ══════════════════════════════════════════════════════════════════
+function renderPicker() {
+  const cans = S.day.canceladasPicker || [];
+
+  // KPIs
+  const lt5  = cans.filter(c=>c.tCan<5).length;
+  const m5m15= cans.filter(c=>c.tCan>=5&&c.tCan<15).length;
+  const gt15 = cans.filter(c=>c.tCan>=15).length;
+  const tprom= cans.length ? (cans.reduce((a,c)=>a+c.tCan,0)/cans.length).toFixed(1) : '0.0';
+
+  const s = v => document.getElementById(v);
+  if(s('pk-can-total')) s('pk-can-total').textContent = cans.length;
+  if(s('pk-can-lt5'))   s('pk-can-lt5').textContent   = lt5;
+  if(s('pk-can-5-15'))  s('pk-can-5-15').textContent  = m5m15;
+  if(s('pk-can-gt15'))  s('pk-can-gt15').textContent  = gt15;
+  if(s('pk-can-tprom')) s('pk-can-tprom').textContent = tprom + ' min';
+
+  // Por ciudad
+  const byCiu = {};
+  cans.forEach(c => {
+    if(!byCiu[c.city]) byCiu[c.city]={total:0,lt5:0,m5m15:0,gt15:0,times:[]};
+    byCiu[c.city].total++;
+    byCiu[c.city].times.push(c.tCan);
+    if(c.tCan<5) byCiu[c.city].lt5++;
+    else if(c.tCan<15) byCiu[c.city].m5m15++;
+    else byCiu[c.city].gt15++;
+  });
+  const tbCiu = document.getElementById('tb-pk-ciudad');
+  if(tbCiu){
+    const rows = Object.entries(byCiu).sort((a,b)=>b[1].total-a[1].total);
+    if(!rows.length){
+      tbCiu.innerHTML='<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text3);font-size:11px">Sin canceladas Picker hoy</td></tr>';
+    } else {
+      tbCiu.innerHTML = rows.map(([city,d])=>`<tr>
+        <td><strong>${city}</strong></td>
+        <td style="color:var(--red-t);font-weight:700">${d.total}</td>
+        <td>${d.lt5}</td><td>${d.m5m15}</td>
+        <td style="color:${d.gt15>0?'var(--red-t)':'inherit'}">${d.gt15}</td>
+        <td style="font-family:var(--mono)">${d.times.length?(d.times.reduce((a,b)=>a+b,0)/d.times.length).toFixed(1):0} min</td>
+      </tr>`).join('');
+    }
+  }
+
+  // Por tienda
+  const byTie = {};
+  cans.forEach(c => {
+    if(!byTie[c.store]) byTie[c.store]={city:c.city,total:0,lt5:0,m5m15:0,gt15:0,times:[]};
+    byTie[c.store].total++;
+    byTie[c.store].times.push(c.tCan);
+    if(c.tCan<5) byTie[c.store].lt5++;
+    else if(c.tCan<15) byTie[c.store].m5m15++;
+    else byTie[c.store].gt15++;
+  });
+  const tbTie = document.getElementById('tb-pk-tienda');
+  if(tbTie){
+    const rows = Object.entries(byTie).sort((a,b)=>b[1].total-a[1].total);
+    if(!rows.length){
+      tbTie.innerHTML='<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--text3);font-size:11px">Sin canceladas Picker hoy</td></tr>';
+    } else {
+      tbTie.innerHTML = rows.map(([store,d])=>`<tr>
+        <td style="font-size:12px">${store}</td>
+        <td style="color:var(--text3);font-size:11px">${d.city}</td>
+        <td style="color:var(--red-t);font-weight:700">${d.total}</td>
+        <td>${d.lt5}</td><td>${d.m5m15}</td>
+        <td style="color:${d.gt15>0?'var(--red-t)':'inherit'}">${d.gt15}</td>
+        <td style="font-family:var(--mono)">${d.times.length?(d.times.reduce((a,b)=>a+b,0)/d.times.length).toFixed(1):0} min</td>
+      </tr>`).join('');
+    }
+  }
+
+  // Detalle últimas 100
+  const tbDet = document.getElementById('tb-pk-detalle');
+  if(tbDet){
+    const sorted = [...cans].sort((a,b)=>b.tCan-a.tCan).slice(0,100);
+    if(!sorted.length){
+      tbDet.innerHTML='<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--text3);font-size:11px">Sin canceladas Picker hoy</td></tr>';
+    } else {
+      tbDet.innerHTML = sorted.map(x=>{
+        const tc=x.tCan||0;
+        const col=tc>=15?'var(--red-t)':tc>=5?'var(--yellow-t)':'var(--text2)';
+        return`<tr>
+          <td style="font-family:var(--mono);font-weight:700">#${x.id}</td>
+          <td style="font-size:11px">${x.store}</td>
+          <td style="font-size:11px;color:var(--text3)">${x.city}</td>
+          <td style="font-family:var(--mono);color:var(--text2)">${x.hora||'—'}</td>
+          <td style="font-weight:700;color:${col}">${tc.toFixed(1)} min</td>
+          <td><span class="badge ${tc<5?'yellow':tc<15?'neutral':'red'}">${x.tramo}</span></td>
+        </tr>`;
+      }).join('');
+    }
+  }
 }
 
 // INIT
