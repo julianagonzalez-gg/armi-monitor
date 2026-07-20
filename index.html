@@ -256,7 +256,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
   <div class="tab" onclick="switchTab('ciudades')">Deep por ciudad</div>
   <div class="tab" onclick="switchTab('alertas')">Deep ordenes · KM &amp; TP</div>
   <div class="tab" onclick="switchTab('alertas2')">Sin movimiento &amp; Canceladas</div>
-  <div class="tab" onclick="switchTab('picker')" style="color:var(--yellow-t)">📦 Picker</div>
+  <div class="tab" id="tab-nav-picker" onclick="switchTab('picker')" style="color:var(--yellow-t)">📦 Picker</div>
 </div>
 
 <div class="main">
@@ -1042,15 +1042,13 @@ function process(ords) {
 
       } else if(state==='CANCELADA'){
         const isPicker=(o.businessName||'').includes('CAARRY PKR');
-        if(!isPicker){ // Picker excluido de métricas generales
-          d.can++;
+        const tCancel=parseFloat(o.tp)||0; // declarado aquí para scope completo
+        d.can++;
+        if(!isPicker){
           d.byCity[city].can++;
-          const tCancel=parseFloat(o.tp)||0;
           if(tCancel<15){ d.canLt15++; d.byCity[city].canLt15++; }
           else { d.canGt15++; d.byCity[city].canGt15++; }
         } else {
-          d.can++; // contamos para total pero separamos en canceladas
-          const tCancel=parseFloat(o.tp)||0;
           if(tCancel<15) d.canLt15++;
           else d.canGt15++;
         }
@@ -1061,8 +1059,7 @@ function process(ords) {
         const hora=horaRaw.slice(0,5);
         const canEntry={id,brand,city,store,km,tCan:tCancel,hora,
           tramo:tCancel<5?'<5 min':tCancel<15?'5–15 min':'>15 min'};
-        // Picker va solo a su propio array — excluido de métricas generales
-        if(brand.includes('CAARRY PKR')){
+        if(isPicker){
           d.canceladasPicker.push(canEntry);
         } else {
           d.canceladas.push(canEntry);
@@ -1293,8 +1290,13 @@ function render(){
   renderDeepOrdenes();
   // Sin movimiento + canceladas
   renderAlertas2();
-  // Picker
-  renderPicker();
+  // Picker — solo visible en Colombia
+  const pickerNav = document.getElementById('tab-nav-picker');
+  const isVEN = (cfg().cou||'').toUpperCase().trim() === 'VEN';
+  if(pickerNav) pickerNav.style.display = isVEN ? 'none' : '';
+  if(!isVEN) renderPicker();
+  // Si estaba en pestaña Picker y cambia a VEN, volver a General
+  if(isVEN && S.currentTab === 'picker') switchTab('general');
 }
 
 function renderEncol(tbId, rows, rowFn, cols) {
@@ -1485,7 +1487,7 @@ function renderOidCol(colId,cntId,rows,colorCls,valFn){
   if(!rows.length){el.innerHTML='<div class="deep-empty">Sin órdenes en este rango</div>';return;}
   el.innerHTML=rows.map(x=>`
     <div class="oid-row ${colorCls==='b'?'':colorCls}">
-      <span class="oid-id">#${x.id}</span>
+      <a href="${orderLink(x.id, cfg().cou)}" target="_blank" class="oid-id" style="color:var(--armi-l);text-decoration:none" title="Ver en monitor">#${x.id} ↗</a>
       <span class="oid-val ${colorCls==='g'?'lbl-green':colorCls==='y'?'lbl-yellow':colorCls==='b'?'lbl-armi':'lbl-red'}">${valFn(x)}</span>
     </div>`).join('');
 }
@@ -1566,7 +1568,7 @@ function renderAlertas2(){
     tbSM.innerHTML=sinMov.map(o=>{
       const urg=o.mins>30?'var(--red-t)':o.mins>20?'var(--yellow-t)':'var(--text2)';
       return`<tr>
-        <td style="font-family:var(--mono);font-weight:700">#${o.id}</td>
+        <td>${orderLinkHtml(o.id, cfg().cou)}</td>
         <td>${o.brand}</td>
         <td>${o.city}</td>
         <td style="font-size:11px;color:var(--text3)">${o.store}</td>
@@ -1674,7 +1676,7 @@ function renderAlertas2(){
       const col=tc<5?'var(--yellow-t)':tc<15?'var(--text2)':'var(--red-t)';
       const horaStr=x.hora||'—';
       return`<tr>
-        <td style="font-family:var(--mono);font-weight:700">#${x.id}</td>
+        <td>${orderLinkHtml(x.id, cfg().cou)}</td>
         <td>${x.brand}</td>
         <td>${x.city}</td>
         <td style="font-size:11px;color:var(--text3)">${x.store}</td>
@@ -2098,7 +2100,7 @@ function renderPicker() {
         const tc=x.tCan||0;
         const col=tc>=15?'var(--red-t)':tc>=5?'var(--yellow-t)':'var(--text2)';
         return`<tr>
-          <td style="font-family:var(--mono);font-weight:700">#${x.id}</td>
+          <td>${orderLinkHtml(x.id, cfg().cou)}</td>
           <td style="font-size:11px">${x.store}</td>
           <td style="font-size:11px;color:var(--text3)">${x.city}</td>
           <td style="font-family:var(--mono);color:var(--text2)">${x.hora||'—'}</td>
@@ -2110,6 +2112,18 @@ function renderPicker() {
   }
 }
 
+
+// Genera link al monitor de Armi para una orden
+function orderLink(id, country) {
+  const cou = (country || (document.getElementById('cfCountry')||{}).value || 'COL').trim();
+  // El orderId en la URL siempre lleva el prefijo B si no lo tiene
+  const linkId = /^[A-Za-z]/.test(id) ? id : 'B' + id;
+  return `https://mc.tuarmi.com/monitor/search-orders/${linkId}/${cou}`;
+}
+function orderLinkHtml(id, country) {
+  const url = orderLink(id, country);
+  return `<a href="${url}" target="_blank" style="font-family:var(--mono);font-weight:700;color:var(--armi-l);text-decoration:none" title="Ver en monitor">#${id} ↗</a>`;
+}
 // INIT
 fetchNow();
 startTimer();
