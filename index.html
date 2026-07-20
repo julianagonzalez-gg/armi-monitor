@@ -915,12 +915,8 @@ async function fetchAll() {
       // Fijamos "hoy" desde la primera orden — hora Colombia directa del servidor de Armi
       todayStr=(ords[0].createDate||'').slice(0,10);
       window._armiTodayDate=todayStr;
-      // Las órdenes activas para encolamiento = página 1 (las más recientes = tiempo real)
-      // Las filtramos aquí y las guardamos en S.active antes de paginar el día completo
-      S.active=ords.filter(o=>{
-        const st=(o.state||o.status||'').toUpperCase().trim();
-        return st!=='FINALIZADA'&&st!=='CANCELADA';
-      });
+      // Página 1 = órdenes más recientes (tiempo real para encolamiento)
+      // S.active se construirá desde TODAS las órdenes del día en process()
     }
 
     all=all.concat(ords);
@@ -989,7 +985,12 @@ const CITY_NAMES={
   'MON':'Montería','VAL':'Valledupar','RIO':'Riohacha','TUN':'Tunja',
   'POP':'Popayán','FLO':'Florencia','LET':'Leticia','MIT':'Mitú',
   'ARA':'Arauca','YOP':'Yopal','INI':'Inírida','PRS':'Puerto Carreño',
-  'MOC':'Mocoa','QUI':'Quibdó','SJG':'San José del Guaviare','CHI':'Chía','SOA':'Sopó','ZIP':'Zipaquirá','FAC':'Facatativá','AMU':'Armero','RIO':'Rionegro',
+  'MOC':'Mocoa','QUI':'Quibdó','SJG':'San José del Guaviare',
+  'CHI':'Chía','SOA':'Sopó','ZIP':'Zipaquirá','FAC':'Facatativá','AMU':'Armero',
+  'SMR':'Santa Marta','VUP':'Villavicencio','DOS':'Dos Quebradas','ENV':'Envigado',
+  'GAI':'Girardot','JIC':'Jericó','OMB':'Ocaña','SOL':'Soledad','TER':'Turbaco',
+  'BUC':'Bucaramanga','GIR':'Girón','PIE':'Piedecuesta','RIO':'Rionegro',
+  'MAG':'Magangué','SIN':'Sincelejo','MAI':'Maicao','YOP':'Yopal','GIR2':'Girardota',
 };
 function cityName(id){ return CITY_NAMES[id]||id||'Desconocida'; }
 
@@ -1069,8 +1070,11 @@ function process(ords) {
     }
   });
 
-  // S.active ya fue asignado desde la página 1 en fetchAll (tiempo real)
-  // No lo sobreescribimos aquí para no mezclar órdenes viejas del día
+  // S.active = todas las órdenes activas del día (para TAO real y encolamiento completo)
+  S.active = ords.filter(o => {
+    const st=(o.state||o.status||'').toUpperCase().trim();
+    return st!=='FINALIZADA' && st!=='CANCELADA';
+  });
 }
 
 function calcTimes(o){
@@ -1995,7 +1999,8 @@ function renderTimings() {
   // Actualizar tabla de tiempos por ciudad
   const tbTC = document.getElementById('tb-tiempociu-body');
   if (tbTC && Object.keys(t.byCity).length > 0) {
-    const cities = Object.keys(S.day.byCity).sort();
+    // Solo mostrar ciudades que tengan muestras de tiempos
+    const cities = Object.keys(t.byCity).filter(c => (t.byCity[c].total||[]).length > 0).sort();
     tbTC.innerHTML = cities.map(city => {
       const tc = t.byCity[city] || {};
       const n = (tc.total||[]).length;
