@@ -1042,15 +1042,13 @@ function process(ords) {
 
       } else if(state==='CANCELADA'){
         const isPicker=(o.businessName||'').includes('CAARRY PKR');
-        const tCancel=parseFloat(o.tp)||0; // declarado aquí para scope completo
-        d.can++;
+        const tCancel=parseFloat(o.tp)||0;
         if(!isPicker){
+          // Solo no-Picker cuenta en métricas generales de cancelaciones
+          d.can++;
           d.byCity[city].can++;
           if(tCancel<15){ d.canLt15++; d.byCity[city].canLt15++; }
           else { d.canGt15++; d.byCity[city].canGt15++; }
-        } else {
-          if(tCancel<15) d.canLt15++;
-          else d.canGt15++;
         }
         const brand=(o.businessName||'—').trim();
         const store=(o.branchOfficeName||'—').trim();
